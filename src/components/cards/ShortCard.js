@@ -28,15 +28,15 @@ const ShortCard = ({ short }) => {
   return (
     <Card
       sx={{
-        width: 200,
-        height: 350,
+        width: 250,
+        height: 400,
         display: "flex",
         flexDirection: "column",
         borderRadius: 3,
         "&:hover": {
           cursor: "pointer",
-          transform: "scale(1.02)",
-          transition: "transform 0.2s ease-in-out",
+          // transform: "scale(1.02)",
+          // transition: "transform 0.2s ease-in-out",
         },
       }}
     >
@@ -75,7 +75,7 @@ const ShortCard = ({ short }) => {
           >
             {short.title}
           </Typography>
-          <Stack direction="row" spacing={1} alignItems="center">
+          {/* <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="caption">
               {new Intl.NumberFormat("en-US", { notation: "compact" }).format(
                 short.views
@@ -84,7 +84,7 @@ const ShortCard = ({ short }) => {
             </Typography>
             <Typography variant="caption">•</Typography>
             <Typography variant="caption">{formattedDate}</Typography>
-          </Stack>
+          </Stack> */}
         </Box>
       </Box>
     </Card>

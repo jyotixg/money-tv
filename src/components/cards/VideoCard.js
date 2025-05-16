@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   Card,
@@ -5,25 +6,96 @@ import {
   CardMedia,
   Typography,
   Stack,
+  IconButton,
 } from "@mui/material";
-import { formatDistanceToNow } from "date-fns";
-import { useState, useEffect } from "react";
+import { ContentCopy, Share, WhatsApp } from "@mui/icons-material";
+
+const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: 0,
+      borderRadius: 1,
+      cursor: "pointer",
+      padding: "4px 8px",
+      transition: "all 0.2s ease-in-out",
+      "&:hover": {
+        // backgroundColor: "rgba(0, 0, 0, 0.04)",
+        "& .MuiTypography-root, & .MuiSvgIcon-root": {
+          color: "grey.700",
+        },
+      },
+    }}
+    onClick={onClick}
+  >
+    {isReversed ? (
+      <>
+        <Typography
+          variant="caption"
+          sx={{
+            color: "grey.500",
+            fontSize: "0.7rem",
+            userSelect: "none",
+            mr: 0.5,
+            transition: "color 0.2s ease-in-out",
+          }}
+        >
+          {label}
+        </Typography>
+        {React.cloneElement(icon, {
+          sx: {
+            ...icon.props.sx,
+            color: "grey.500",
+            transition: "color 0.2s ease-in-out",
+          },
+        })}
+      </>
+    ) : (
+      <>
+        {React.cloneElement(icon, {
+          sx: {
+            ...icon.props.sx,
+            color: "grey.500",
+            transition: "color 0.2s ease-in-out",
+          },
+        })}
+        <Typography
+          variant="caption"
+          sx={{
+            color: "grey.500",
+            fontSize: "0.7rem",
+            userSelect: "none",
+            ml: 0.5,
+            transition: "color 0.2s ease-in-out",
+          }}
+        >
+          {label}
+        </Typography>
+      </>
+    )}
+  </Box>
+);
 
 const VideoCard = ({ video }) => {
-  const [formattedDate, setFormattedDate] = useState("recently");
-  const [mounted, setMounted] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard?.writeText(video.name);
+  };
 
-  useEffect(() => {
-    setMounted(true);
-    try {
-      const date = formatDistanceToNow(new Date(video.uploadDate), {
-        addSuffix: true,
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: video.name,
+        text: video.description,
+        url: window.location.href,
       });
-      setFormattedDate(date);
-    } catch (error) {
-      setFormattedDate("recently");
     }
-  }, [video.uploadDate]);
+  };
+
+  const handleWhatsApp = () => {
+    const text = encodeURIComponent(`${video.name}\n${window.location.href}`);
+    window.open(`https://wa.me/?text=${text}`, "_blank");
+  };
 
   return (
     <Card
@@ -34,11 +106,9 @@ const VideoCard = ({ video }) => {
         flexDirection: "column",
         "&:hover": {
           cursor: "pointer",
-          "& .MuiCardMedia-root": {
-            transform: "scale(1.05)",
-            transition: "transform 0.3s ease-in-out",
-          },
         },
+        border: "none",
+        boxShadow: "none",
       }}
     >
       <Box
@@ -54,27 +124,23 @@ const VideoCard = ({ video }) => {
             left: 0,
             width: "100%",
             height: "100%",
-            transition: "transform 0.3s ease-in-out",
+            borderRadius: 2,
           }}
         />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 8,
-            right: 8,
-            bgcolor: "rgba(0, 0, 0, 0.8)",
-            color: "white",
-            padding: "2px 4px",
-            borderRadius: 1,
-            fontSize: "0.8rem",
-          }}
-        >
-          {video.duration}
-        </Box>
       </Box>
-      <CardContent sx={{ flexGrow: 1, p: 1.5 }}>
+      <CardContent
+        sx={{
+          flexGrow: 1,
+          p: 1.5,
+          display: "flex",
+          flexDirection: "column",
+          height: "120px",
+          "&:last-child": {
+            paddingBottom: 1.5,
+          },
+        }}
+      >
         <Typography
-          gutterBottom
           variant="subtitle1"
           component="div"
           sx={{
@@ -85,21 +151,43 @@ const VideoCard = ({ video }) => {
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             lineHeight: 1.2,
-            mb: 1,
+            // mb: "auto",
+            minHeight: "2.4em",
+            maxHeight: "2.4em",
           }}
         >
           {video.name}
         </Typography>
-        <Stack spacing={0.5}>
-          <Typography variant="body2" color="text.secondary">
-            {video.channelName}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {`${new Intl.NumberFormat("en-US", { notation: "compact" }).format(
-              video.views
-            )} views • ${formattedDate}`}
-          </Typography>
-        </Stack>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            // mt: 1,
+            pt: 1,
+            // borderTop: 1,
+            // borderColor: "grey.100",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <ActionButton
+              icon={<WhatsApp sx={{ fontSize: "1.1rem" }} />}
+              label="Send"
+              onClick={handleWhatsApp}
+            />
+            <ActionButton
+              icon={<ContentCopy sx={{ fontSize: "1.1rem" }} />}
+              label="Copy"
+              onClick={handleCopy}
+            />
+          </Box>
+          <ActionButton
+            icon={<Share sx={{ fontSize: "1.1rem" }} />}
+            label="Share"
+            onClick={handleShare}
+            isReversed={true}
+          />
+        </Box>
       </CardContent>
     </Card>
   );

@@ -10,6 +10,8 @@ import {
   Typography,
   Button,
   Divider,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Home as HomeIcon,
@@ -38,76 +40,37 @@ const mainSidebarItems = [
 const bottomSidebarItems = [{ text: "Settings", icon: <SettingsIcon /> }];
 
 const Sidebar = ({ open, onClose, isDarkMode, onToggleTheme }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <>
-      {/* Mini permanent drawer */}
-      <Drawer
-        variant="permanent"
-        anchor="right"
-        sx={{
-          width: MINI_DRAWER_WIDTH,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
+      {/* Mini permanent drawer - Hidden on mobile */}
+      {!isMobile && (
+        <Drawer
+          variant="permanent"
+          anchor="right"
+          sx={{
             width: MINI_DRAWER_WIDTH,
-            boxSizing: "border-box",
-            top: "64px",
-            height: `calc(100% - 64px)`,
-            backgroundColor: "background.default",
-            borderLeft: "1px solid",
-            borderColor: "divider",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          },
-        }}
-      >
-        {/* Top icons */}
-        <List>
-          {mainSidebarItems.map((item) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    justifyContent: "center",
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-
-        {/* Bottom icons */}
-        <Box>
+            flexShrink: 0,
+            display: { xs: "none", sm: "block" },
+            "& .MuiDrawer-paper": {
+              width: MINI_DRAWER_WIDTH,
+              boxSizing: "border-box",
+              top: "64px",
+              height: `calc(100% - 64px)`,
+              backgroundColor: "background.default",
+              borderLeft: "1px solid",
+              borderColor: "divider",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            },
+          }}
+        >
+          {/* Top icons */}
           <List>
-            <ListItem disablePadding>
-              <ListItemButton
-                onClick={onToggleTheme}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    justifyContent: "center",
-                  }}
-                >
-                  {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
-                </ListItemIcon>
-              </ListItemButton>
-            </ListItem>
-            {bottomSidebarItems.map((item) => (
+            {mainSidebarItems.map((item) => (
               <ListItem key={item.text} disablePadding>
                 <ListItemButton
                   sx={{
@@ -128,8 +91,53 @@ const Sidebar = ({ open, onClose, isDarkMode, onToggleTheme }) => {
               </ListItem>
             ))}
           </List>
-        </Box>
-      </Drawer>
+
+          {/* Bottom icons */}
+          <Box>
+            <List>
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={onToggleTheme}
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      justifyContent: "center",
+                    }}
+                  >
+                    {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+                  </ListItemIcon>
+                </ListItemButton>
+              </ListItem>
+              {bottomSidebarItems.map((item) => (
+                <ListItem key={item.text} disablePadding>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </Drawer>
+      )}
 
       {/* Full-width temporary drawer */}
       <Drawer
@@ -138,11 +146,11 @@ const Sidebar = ({ open, onClose, isDarkMode, onToggleTheme }) => {
           flexShrink: 0,
           position: "fixed",
           "& .MuiDrawer-paper": {
-            width: DRAWER_WIDTH,
+            width: isMobile ? "50%" : DRAWER_WIDTH,
             boxSizing: "border-box",
             top: 0,
             height: "100%",
-            zIndex: (theme) => theme.zIndex.appBar - 1,
+            zIndex: (theme) => theme.zIndex.appBar + 1,
             borderLeft: "1px solid",
             borderColor: "divider",
           },

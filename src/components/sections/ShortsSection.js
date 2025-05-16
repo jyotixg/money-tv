@@ -1,5 +1,12 @@
 import { useState, useRef } from "react";
-import { Box, Typography, IconButton, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Button,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import ShortCard from "../cards/ShortCard";
 import {
   ChevronLeft as ChevronLeftIcon,
@@ -7,6 +14,8 @@ import {
 } from "@mui/icons-material";
 
 const ShortsSection = ({ title, shorts }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const scrollContainerRef = useRef(null);
   const [showLeftScroll, setShowLeftScroll] = useState(false);
   const [showRightScroll, setShowRightScroll] = useState(true);
@@ -22,7 +31,9 @@ const ShortsSection = ({ title, shorts }) => {
 
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
-      const scrollAmount = direction === "left" ? -600 : 600;
+      const containerWidth = scrollContainerRef.current.clientWidth;
+      const scrollAmount =
+        direction === "left" ? -containerWidth : containerWidth;
       scrollContainerRef.current.scrollBy({
         left: scrollAmount,
         behavior: "smooth",
@@ -40,16 +51,21 @@ const ShortsSection = ({ title, shorts }) => {
           mb: 2,
         }}
       >
-        <Typography variant="h5" component="h2" fontWeight="bold">
+        <Typography
+          variant="h6"
+          component="h2"
+          fontWeight="bold"
+          color="primary.main"
+        >
           {title}
         </Typography>
         <Button endIcon={<ChevronRightIcon />} sx={{ textTransform: "none" }}>
-          See all
+          View More
         </Button>
       </Box>
 
       <Box sx={{ position: "relative" }}>
-        {showLeftScroll && (
+        {showLeftScroll && !isMobile && (
           <IconButton
             sx={{
               position: "absolute",
@@ -79,16 +95,28 @@ const ShortsSection = ({ title, shorts }) => {
               display: "none",
             },
             px: 1,
+            maxWidth: "100%", // Ensure container doesn't exceed viewport
           }}
         >
-          {shorts.slice(0, 5).map((short) => (
-            <Box key={short.id} sx={{ flex: "0 0 auto" }}>
+          {shorts.map((short) => (
+            <Box
+              key={short.id}
+              sx={{
+                flex: {
+                  xs: "0 0 250px", // Increased width for shorts cards
+                  sm: "0 0 250px",
+                },
+                minWidth: "250px", // Ensure minimum width
+                maxWidth: "250px", // Ensure maximum width
+                height: "400px", // Increased height
+              }}
+            >
               <ShortCard short={short} />
             </Box>
           ))}
         </Box>
 
-        {showRightScroll && (
+        {showRightScroll && !isMobile && (
           <IconButton
             sx={{
               position: "absolute",

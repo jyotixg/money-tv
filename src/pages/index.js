@@ -8,7 +8,14 @@ import { mainArr } from "../data/homeData";
 export default function Home() {
   return (
     <Layout>
-      <Container maxWidth="xl" sx={{ py: 2 }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          px: { xs: 3, sm: 3, md: 6 },
+          width: "100%",
+          maxWidth: "100% !important",
+        }}
+      >
         {mainArr.map((section, index) => {
           switch (section.type) {
             case "videos":

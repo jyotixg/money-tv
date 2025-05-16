@@ -1,5 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, Tabs, Tab, IconButton, useTheme, styled } from "@mui/material";
+import {
+  Box,
+  Tabs,
+  Tab,
+  IconButton,
+  useTheme,
+  styled,
+  useMediaQuery,
+} from "@mui/material";
 import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
@@ -27,7 +35,7 @@ const ScrollContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   display: "flex",
   alignItems: "center",
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
   padding: theme.spacing(1, 1),
 }));
 
@@ -36,7 +44,7 @@ const ScrollButton = styled(IconButton)(({ theme }) => ({
   zIndex: 2,
   height: "60%",
   padding: theme.spacing(1),
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
   transition: "opacity 0.3s ease",
   "&.left": {
     left: 0,
@@ -65,13 +73,19 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   margin: theme.spacing(0, 0.5),
   padding: theme.spacing(0.75, 1),
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.grey[100],
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? theme.palette.grey[800]
+      : theme.palette.grey[100],
   color: theme.palette.text.secondary,
   textTransform: "none",
   fontSize: "0.8rem",
   fontWeight: 500,
   "&:hover": {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.grey[700]
+        : theme.palette.grey[200],
     color: theme.palette.text.primary,
   },
   "&.Mui-selected": {
@@ -94,6 +108,7 @@ const CategoryTabs = () => {
   const [showRightButton, setShowRightButton] = useState(false);
   const tabsRef = useRef(null);
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     setMounted(true);
@@ -159,7 +174,7 @@ const CategoryTabs = () => {
 
   return (
     <ScrollContainer>
-      {showLeftButton && (
+      {showLeftButton && !isMobile && (
         <ScrollButton
           className="left"
           onClick={() => handleScroll("left")}
@@ -186,7 +201,7 @@ const CategoryTabs = () => {
         ))}
       </StyledTabs>
 
-      {showRightButton && (
+      {showRightButton && !isMobile && (
         <ScrollButton
           className="right"
           onClick={() => handleScroll("right")}

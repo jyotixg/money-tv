@@ -1,61 +1,117 @@
-import { Card, CardContent, CardMedia, Typography, Box } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Box,
+  Button,
+} from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+import { ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 
 const AdCard = ({ ad }) => {
   return (
     <Card
       sx={{
         width: "100%",
-        height: "100%",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: { xs: "column", md: "row" },
         position: "relative",
-        "&:hover": {
-          cursor: "pointer",
-          "& .MuiCardMedia-root": {
-            transform: "scale(1.02)",
-            transition: "transform 0.3s ease-in-out",
-          },
-        },
+        borderRadius: 2,
+        overflow: "hidden",
+        boxShadow: 3,
       }}
-      onClick={() => window.open(ad.redirectUrl, "_blank")}
     >
-      <Box sx={{ position: "relative", paddingTop: "25%", overflow: "hidden" }}>
+      {/* Image Section - Takes full width on mobile, half width on desktop */}
+      <Box
+        sx={{
+          width: { xs: "100%", md: "50%" },
+          position: "relative",
+          minHeight: { xs: "100px", md: "100px" },
+        }}
+      >
         <CardMedia
           component="img"
           image={ad.adImageUrl}
           alt={ad.title}
           sx={{
+            height: "100%",
+            width: "100%",
+            objectFit: "cover",
             position: "absolute",
             top: 0,
             left: 0,
-            width: "100%",
-            height: "100%",
-            transition: "transform 0.3s ease-in-out",
           }}
         />
         <Box
           sx={{
             position: "absolute",
-            top: 8,
-            left: 8,
-            bgcolor: "rgba(0, 0, 0, 0.6)",
+            top: 16,
+            left: 16,
+            bgcolor: "primary.main",
             color: "white",
-            padding: "2px 8px",
+            padding: "4px 12px",
             borderRadius: 1,
-            fontSize: "0.75rem",
+            fontSize: "0.875rem",
+            fontWeight: "medium",
           }}
         >
           Ad
         </Box>
       </Box>
-      <CardContent sx={{ flexGrow: 1, bgcolor: "grey.100" }}>
-        <Typography variant="h6" gutterBottom>
+
+      {/* Content Section - Takes full width on mobile, half width on desktop */}
+      <Box
+        sx={{
+          width: { xs: "100%", md: "50%" },
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          p: { xs: 1, md: 2 },
+          bgcolor: "background.paper",
+        }}
+      >
+        <Typography
+          variant="h5"
+          component="h4"
+          gutterBottom
+          sx={{
+            fontWeight: "bold",
+            mb: 1,
+          }}
+        >
           {ad.title}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{
+            mb: 1,
+            lineHeight: 1.3,
+          }}
+        >
           {ad.description}
         </Typography>
-      </CardContent>
+
+        <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          endIcon={<ChevronRightIcon />}
+          onClick={() => window.open(ad.redirectUrl, "_blank")}
+          sx={{
+            width: "fit-content",
+            textTransform: "none",
+            px: 2,
+            // py: 0.5,
+            borderRadius: 2,
+            fontSize: "1rem",
+          }}
+        >
+          Learn More
+        </Button>
+      </Box>
     </Card>
   );
 };
