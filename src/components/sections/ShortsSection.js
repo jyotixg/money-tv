@@ -12,8 +12,10 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
 } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
-const ShortsSection = ({ title, shorts }) => {
+const ShortsSection = ({ title, shorts, sectionIndex }) => {
+  const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const scrollContainerRef = useRef(null);
@@ -41,6 +43,10 @@ const ShortsSection = ({ title, shorts }) => {
     }
   };
 
+  const handleViewMore = () => {
+    router.push(`/section/${sectionIndex}`);
+  };
+
   return (
     <Box sx={{ mb: 4 }}>
       <Box
@@ -59,7 +65,11 @@ const ShortsSection = ({ title, shorts }) => {
         >
           {title}
         </Typography>
-        <Button endIcon={<ChevronRightIcon />} sx={{ textTransform: "none" }}>
+        <Button
+          endIcon={<ChevronRightIcon />}
+          sx={{ textTransform: "none" }}
+          onClick={handleViewMore}
+        >
           View More
         </Button>
       </Box>
@@ -111,7 +121,7 @@ const ShortsSection = ({ title, shorts }) => {
                 height: "400px", // Increased height
               }}
             >
-              <ShortCard short={short} />
+              <ShortCard short={short} sectionIndex={sectionIndex} />
             </Box>
           ))}
         </Box>

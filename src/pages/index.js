@@ -24,6 +24,7 @@ export default function Home() {
                   key={`${section.type}-${index}`}
                   title={section.sectionTitle}
                   videos={section.content}
+                  sectionIndex={index}
                 />
               );
             case "shorts":
@@ -32,6 +33,7 @@ export default function Home() {
                   key={`${section.type}-${index}`}
                   title={section.sectionTitle}
                   shorts={section.content}
+                  sectionIndex={index}
                 />
               );
             case "ads":

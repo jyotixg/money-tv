@@ -9,6 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { ContentCopy, Share, WhatsApp } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
   <Box
@@ -77,12 +78,16 @@ const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
   </Box>
 );
 
-const VideoCard = ({ video }) => {
-  const handleCopy = () => {
+const VideoCard = ({ video, sectionIndex }) => {
+  const router = useRouter();
+
+  const handleCopy = (e) => {
+    e.stopPropagation(); // Prevent card click event
     navigator.clipboard?.writeText(video.name);
   };
 
-  const handleShare = () => {
+  const handleShare = (e) => {
+    e.stopPropagation(); // Prevent card click event
     if (navigator.share) {
       navigator.share({
         title: video.name,
@@ -92,9 +97,14 @@ const VideoCard = ({ video }) => {
     }
   };
 
-  const handleWhatsApp = () => {
+  const handleWhatsApp = (e) => {
+    e.stopPropagation(); // Prevent card click event
     const text = encodeURIComponent(`${video.name}\n${window.location.href}`);
     window.open(`https://wa.me/?text=${text}`, "_blank");
+  };
+
+  const handleCardClick = () => {
+    router.push(`/${sectionIndex}/${video.id}`);
   };
 
   return (
@@ -110,6 +120,7 @@ const VideoCard = ({ video }) => {
         border: "none",
         boxShadow: "none",
       }}
+      onClick={handleCardClick}
     >
       <Box
         sx={{ position: "relative", paddingTop: "56.25%", overflow: "hidden" }}

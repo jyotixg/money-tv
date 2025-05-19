@@ -12,8 +12,10 @@ import {
   ChevronRight as ChevronRightIcon,
   ChevronLeft as ChevronLeftIcon,
 } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
-const VideoSection = ({ title, videos }) => {
+const VideoSection = ({ title, videos, sectionIndex }) => {
+  const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
@@ -43,6 +45,10 @@ const VideoSection = ({ title, videos }) => {
     }
   };
 
+  const handleViewMore = () => {
+    router.push(`/section/${sectionIndex}`);
+  };
+
   return (
     <Box sx={{ mb: 4 }}>
       <Box
@@ -61,7 +67,11 @@ const VideoSection = ({ title, videos }) => {
         >
           {title}
         </Typography>
-        <Button endIcon={<ChevronRightIcon />} sx={{ textTransform: "none" }}>
+        <Button
+          endIcon={<ChevronRightIcon />}
+          sx={{ textTransform: "none" }}
+          onClick={handleViewMore}
+        >
           View More
         </Button>
       </Box>
@@ -123,7 +133,7 @@ const VideoSection = ({ title, videos }) => {
                 },
               }}
             >
-              <VideoCard video={video} />
+              <VideoCard video={video} sectionIndex={sectionIndex} />
             </Box>
           ))}
         </Box>

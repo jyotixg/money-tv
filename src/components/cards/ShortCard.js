@@ -8,8 +8,10 @@ import {
 } from "@mui/material";
 import { formatDistanceToNow } from "date-fns";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
-const ShortCard = ({ short }) => {
+const ShortCard = ({ short, sectionIndex }) => {
+  const router = useRouter();
   const [formattedDate, setFormattedDate] = useState("recently");
   const [mounted, setMounted] = useState(false);
 
@@ -25,6 +27,10 @@ const ShortCard = ({ short }) => {
     }
   }, [short.uploadDate]);
 
+  const handleCardClick = () => {
+    router.push(`/${sectionIndex}/${short.id}`);
+  };
+
   return (
     <Card
       sx={{
@@ -39,6 +45,7 @@ const ShortCard = ({ short }) => {
           // transition: "transform 0.2s ease-in-out",
         },
       }}
+      onClick={handleCardClick}
     >
       <Box sx={{ position: "relative", height: "100%" }}>
         <CardMedia
