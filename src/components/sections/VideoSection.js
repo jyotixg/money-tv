@@ -6,6 +6,7 @@ import {
   IconButton,
   useTheme,
   useMediaQuery,
+  Grid,
 } from "@mui/material";
 import VideoCard from "../cards/VideoCard";
 import {
@@ -18,7 +19,6 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const scrollContainerRef = useRef(null);
   const [showLeftScroll, setShowLeftScroll] = useState(false);
   const [showRightScroll, setShowRightScroll] = useState(true);
@@ -50,7 +50,7 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
   };
 
   return (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{}}>
       <Box
         sx={{
           display: "flex",
@@ -99,43 +99,38 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
           ref={scrollContainerRef}
           onScroll={handleScroll}
           sx={{
-            display: "flex",
-            gap: 2,
             overflowX: "auto",
             scrollbarWidth: "none",
             "&::-webkit-scrollbar": {
               display: "none",
             },
-            px: 1,
           }}
         >
-          {videos.map((video) => (
-            <Box
-              key={video.id}
-              sx={{
-                flex: {
-                  xs: "0 0 calc(100% - 16px)", // 1 video per row on mobile
-                  sm: "0 0 calc(50% - 16px)", // 2 videos per row on tablet
-                  md: "0 0 calc(33.333% - 16px)", // 3 videos per row on small desktop
-                  lg: "0 0 calc(25% - 16px)", // 4 videos per row on larger screens
-                },
-                minWidth: {
-                  xs: "calc(100% - 16px)",
-                  sm: "calc(50% - 16px)",
-                  md: "calc(33.333% - 16px)",
-                  lg: "calc(25% - 16px)",
-                },
-                maxWidth: {
-                  xs: "calc(100% - 16px)",
-                  sm: "calc(50% - 16px)",
-                  md: "calc(33.333% - 16px)",
-                  lg: "calc(25% - 16px)",
-                },
-              }}
-            >
-              <VideoCard video={video} sectionIndex={sectionIndex} />
-            </Box>
-          ))}
+          <Grid
+            container
+            spacing={2}
+            sx={{
+              flexWrap: "nowrap",
+              width: "max-content",
+            }}
+          >
+            {videos.map((video) => (
+              <Grid
+                item
+                key={video.id}
+                sx={{
+                  width: {
+                    xs: "calc(100vw - 32px)",
+                    sm: "350px",
+                    md: "300px",
+                    lg: "325px",
+                  },
+                }}
+              >
+                <VideoCard video={video} sectionIndex={sectionIndex} />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
 
         {showRightScroll && !isMobile && (

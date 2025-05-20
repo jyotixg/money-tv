@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Box,
@@ -17,6 +17,72 @@ import { mainArr } from "../../data/homeData";
 import { WhatsApp, ContentCopy, Share } from "@mui/icons-material";
 import VideoSection from "../../components/sections/VideoSection";
 import ShortsSection from "../../components/sections/ShortsSection";
+
+const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: 0,
+      borderRadius: 1,
+      cursor: "pointer",
+      padding: "4px 8px",
+      transition: "all 0.2s ease-in-out",
+      "&:hover": {
+        "& .MuiTypography-root, & .MuiSvgIcon-root": {
+          color: "grey.700",
+        },
+      },
+    }}
+    onClick={onClick}
+  >
+    {isReversed ? (
+      <>
+        <Typography
+          variant="caption"
+          sx={{
+            color: "grey.500",
+            fontSize: "0.7rem",
+            userSelect: "none",
+            mr: 0.5,
+            transition: "color 0.2s ease-in-out",
+          }}
+        >
+          {label}
+        </Typography>
+        {React.cloneElement(icon, {
+          sx: {
+            ...icon.props.sx,
+            color: "grey.500",
+            transition: "color 0.2s ease-in-out",
+          },
+        })}
+      </>
+    ) : (
+      <>
+        {React.cloneElement(icon, {
+          sx: {
+            ...icon.props.sx,
+            color: "grey.500",
+            transition: "color 0.2s ease-in-out",
+          },
+        })}
+        <Typography
+          variant="caption"
+          sx={{
+            color: "grey.500",
+            fontSize: "0.7rem",
+            userSelect: "none",
+            ml: 0.5,
+            transition: "color 0.2s ease-in-out",
+          }}
+        >
+          {label}
+        </Typography>
+      </>
+    )}
+  </Box>
+);
 
 const VideoDetailPage = () => {
   const router = useRouter();
@@ -50,7 +116,7 @@ const VideoDetailPage = () => {
           // Get related videos (from the same section except the current one)
           const related = foundSection.content
             .filter((v) => v.id.toString() !== video.toString())
-            .slice(0, 4); // Limit to 4 related videos
+            .slice(0, 5); // Limit to 4 related videos
           setRelatedVideos(related);
         }
 
@@ -65,7 +131,7 @@ const VideoDetailPage = () => {
           (s) => s.type === "videos" && s !== foundSection
         );
         if (otherVideoSections.length > 0) {
-          setRecommendedVideos(otherVideoSections[0].content.slice(0, 4));
+          setRecommendedVideos(otherVideoSections[0].content.slice(0, 5));
         }
 
         // Get ad data
@@ -162,20 +228,27 @@ const VideoDetailPage = () => {
         maxWidth="xl"
         sx={{
           px: { xs: 2, sm: 2, md: 4 },
-          py: 2,
+          // py: 2,
           width: "100%",
           maxWidth: "100% !important",
         }}
       >
-        <Grid container spacing={3}>
+        <Grid
+          container
+          spacing={3}
+          sx={{
+            p: { xs: 3, md: 0 },
+            pl: { md: 3 },
+          }}
+        >
           {/* Left side - Video and details */}
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={9}>
             {/* Video Player */}
             <Box
               sx={{
                 width: "100%",
                 position: "relative",
-                paddingTop: "56.25%", // 16:9 aspect ratio
+                paddingTop: "50.25%", // 16:9 aspect ratio
                 bgcolor: "black",
                 borderRadius: 2,
                 overflow: "hidden",
@@ -224,59 +297,46 @@ const VideoDetailPage = () => {
                 justifyContent: "flex-start",
                 alignItems: "center",
                 gap: 2,
-                mb: 3,
+                mb: 1,
               }}
             >
-              <Button
-                startIcon={<WhatsApp />}
-                variant="contained"
-                size="small"
-                onClick={handleWhatsApp}
-                sx={{
-                  borderRadius: 2,
-                  textTransform: "none",
-                  bgcolor: "#25D366",
-                  "&:hover": { bgcolor: "#128C7E" },
-                }}
-              >
-                Send
-              </Button>
-              <Button
-                startIcon={<ContentCopy />}
-                variant="outlined"
-                size="small"
-                onClick={handleCopy}
-                sx={{
-                  borderRadius: 2,
-                  textTransform: "none",
-                }}
-              >
-                Copy
-              </Button>
-              <Button
-                startIcon={<Share />}
-                variant="outlined"
-                size="small"
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <ActionButton
+                  icon={<WhatsApp sx={{ fontSize: "1.1rem" }} />}
+                  label="Send"
+                  onClick={handleWhatsApp}
+                />
+                <ActionButton
+                  icon={<ContentCopy sx={{ fontSize: "1.1rem" }} />}
+                  label="Copy"
+                  onClick={handleCopy}
+                />
+              </Box>
+              <ActionButton
+                icon={<Share sx={{ fontSize: "1.1rem" }} />}
+                label="Share"
                 onClick={handleShare}
-                sx={{
-                  borderRadius: 2,
-                  textTransform: "none",
-                }}
-              >
-                Share
-              </Button>
+                isReversed={true}
+              />
             </Box>
 
             {/* Video Description */}
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
+            <Box sx={{ mb: 2 }}>
+              <Typography
+                variant="body1"
+                sx={{
+                  whiteSpace: "pre-wrap",
+                  fontSize: "0.875rem",
+                  color: "text.secondary",
+                }}
+              >
                 {videoData.description}
               </Typography>
             </Box>
 
             {/* Advertisement Section */}
             {adData && (
-              <Box sx={{ mb: 4 }}>
+              <Box sx={{ mb: 2 }}>
                 <Typography
                   variant="subtitle2"
                   color="text.secondary"
@@ -340,21 +400,22 @@ const VideoDetailPage = () => {
           </Grid>
 
           {/* Right side - Sidebar with 4 sections */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={3}>
             <Box
               className="sidebar-container"
               sx={{
                 backgroundColor: "background.paper",
                 borderRadius: 2,
                 height: "100%",
-                p: 2,
+                px: 2,
+                pb: 2,
                 "& .MuiPaper-root": {
                   backgroundColor: "background.paper",
                 },
               }}
             >
               {/* Section 1: Related Videos */}
-              <Box sx={{ mb: 4 }}>
+              <Box sx={{ mb: 2 }}>
                 <Typography
                   variant="subtitle1"
                   fontWeight="bold"
@@ -370,12 +431,17 @@ const VideoDetailPage = () => {
                       className="video-card"
                       sx={{
                         display: "flex",
-                        borderRadius: 2,
+                        gap: 1,
+                        borderRadius: 0,
                         overflow: "hidden",
                         cursor: "pointer",
                         backgroundColor: "background.paper",
+                        transition: "background-color 0.2s",
                         "&:hover": {
-                          backgroundColor: "action.hover",
+                          backgroundColor: (theme) =>
+                            theme.palette.mode === "light"
+                              ? "rgba(0, 0, 0, 0.04)"
+                              : "rgba(255, 255, 255, 0.08)",
                         },
                       }}
                       onClick={() => {
@@ -384,9 +450,12 @@ const VideoDetailPage = () => {
                     >
                       <Box
                         sx={{
-                          width: "40%",
+                          width: 100,
+                          minWidth: 100,
+                          height: 50,
                           position: "relative",
-                          paddingTop: "22.5%", // Maintain aspect ratio
+                          borderRadius: 1,
+                          overflow: "hidden",
                         }}
                       >
                         <Box
@@ -403,9 +472,9 @@ const VideoDetailPage = () => {
                           }}
                         />
                       </Box>
-                      <Box sx={{ p: 1, width: "60%" }}>
+                      <Box sx={{ flex: 1, py: 0.5 }}>
                         <Typography
-                          variant="subtitle2"
+                          variant="body2"
                           sx={{
                             overflow: "hidden",
                             textOverflow: "ellipsis",
@@ -414,12 +483,15 @@ const VideoDetailPage = () => {
                             WebkitBoxOrient: "vertical",
                             lineHeight: 1.2,
                             mb: 0.5,
+                            fontSize: "0.75rem",
+                            fontWeight: 500,
+                            color: (theme) =>
+                              theme.palette.mode === "light"
+                                ? "black"
+                                : "inherit",
                           }}
                         >
                           {video.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {video.channelName}
                         </Typography>
                       </Box>
                     </Paper>
@@ -427,10 +499,10 @@ const VideoDetailPage = () => {
                 </Stack>
               </Box>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ my: 1 }} />
 
               {/* Section 2: Recommended Videos */}
-              <Box sx={{ mb: 4 }}>
+              <Box sx={{ mb: 2 }}>
                 <Typography
                   variant="subtitle1"
                   fontWeight="bold"
@@ -439,19 +511,24 @@ const VideoDetailPage = () => {
                   Recommended Videos
                 </Typography>
                 <Stack spacing={2}>
-                  {recommendedVideos.slice(0, 4).map((video) => (
+                  {recommendedVideos.slice(0, 5).map((video) => (
                     <Paper
                       key={video.id}
                       elevation={0}
                       className="video-card"
                       sx={{
                         display: "flex",
-                        borderRadius: 2,
+                        gap: 1,
+                        borderRadius: 0,
                         overflow: "hidden",
                         cursor: "pointer",
                         backgroundColor: "background.paper",
+                        transition: "background-color 0.2s",
                         "&:hover": {
-                          backgroundColor: "action.hover",
+                          backgroundColor: (theme) =>
+                            theme.palette.mode === "light"
+                              ? "rgba(0, 0, 0, 0.04)"
+                              : "rgba(255, 255, 255, 0.08)",
                         },
                       }}
                       onClick={() => {
@@ -466,9 +543,12 @@ const VideoDetailPage = () => {
                     >
                       <Box
                         sx={{
-                          width: "40%",
+                          width: 100,
+                          minWidth: 100,
+                          height: 50,
                           position: "relative",
-                          paddingTop: "22.5%", // Maintain aspect ratio
+                          borderRadius: 1,
+                          overflow: "hidden",
                         }}
                       >
                         <Box
@@ -485,9 +565,9 @@ const VideoDetailPage = () => {
                           }}
                         />
                       </Box>
-                      <Box sx={{ p: 1, width: "60%" }}>
+                      <Box sx={{ flex: 1, py: 0.5 }}>
                         <Typography
-                          variant="subtitle2"
+                          variant="body2"
                           sx={{
                             overflow: "hidden",
                             textOverflow: "ellipsis",
@@ -496,12 +576,15 @@ const VideoDetailPage = () => {
                             WebkitBoxOrient: "vertical",
                             lineHeight: 1.2,
                             mb: 0.5,
+                            fontSize: "0.75rem",
+                            fontWeight: 500,
+                            color: (theme) =>
+                              theme.palette.mode === "light"
+                                ? "black"
+                                : "inherit",
                           }}
                         >
                           {video.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {video.channelName}
                         </Typography>
                       </Box>
                     </Paper>
@@ -509,10 +592,10 @@ const VideoDetailPage = () => {
                 </Stack>
               </Box>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ my: 1 }} />
 
               {/* Section 3: Trending Shorts */}
-              <Box sx={{ mb: 4 }}>
+              <Box sx={{ mb: 2 }}>
                 <Typography
                   variant="subtitle1"
                   fontWeight="bold"
@@ -526,21 +609,12 @@ const VideoDetailPage = () => {
                     gap: 2,
                     overflowX: "auto",
                     pb: 1,
-                    scrollbarWidth: "thin",
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
                     "&::-webkit-scrollbar": {
-                      height: "6px",
+                      display: "none",
                     },
-                    "&::-webkit-scrollbar-track": {
-                      backgroundColor: "action.hover",
-                      borderRadius: 3,
-                    },
-                    "&::-webkit-scrollbar-thumb": {
-                      backgroundColor: "action.selected",
-                      borderRadius: 3,
-                      "&:hover": {
-                        backgroundColor: "action.focus",
-                      },
-                    },
+                    "-webkit-overflow-scrolling": "touch",
                   }}
                 >
                   {shortsData.map((short) => (
@@ -605,7 +679,7 @@ const VideoDetailPage = () => {
                 </Box>
               </Box>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ my: 1 }} />
 
               {/* Section 4: More Videos */}
               <Box>
@@ -617,19 +691,24 @@ const VideoDetailPage = () => {
                   More Videos
                 </Typography>
                 <Stack spacing={2}>
-                  {recommendedVideos.slice(0, 4).map((video) => (
+                  {recommendedVideos.slice(0, 5).map((video) => (
                     <Paper
                       key={video.id}
                       elevation={0}
                       className="video-card"
                       sx={{
                         display: "flex",
-                        borderRadius: 2,
+                        gap: 1,
+                        borderRadius: 0,
                         overflow: "hidden",
                         cursor: "pointer",
                         backgroundColor: "background.paper",
+                        transition: "background-color 0.2s",
                         "&:hover": {
-                          backgroundColor: "action.hover",
+                          backgroundColor: (theme) =>
+                            theme.palette.mode === "light"
+                              ? "rgba(0, 0, 0, 0.04)"
+                              : "rgba(255, 255, 255, 0.08)",
                         },
                       }}
                       onClick={() => {
@@ -644,9 +723,12 @@ const VideoDetailPage = () => {
                     >
                       <Box
                         sx={{
-                          width: "40%",
+                          width: 100,
+                          minWidth: 100,
+                          height: 50,
                           position: "relative",
-                          paddingTop: "22.5%", // Maintain aspect ratio
+                          borderRadius: 1,
+                          overflow: "hidden",
                         }}
                       >
                         <Box
@@ -663,9 +745,9 @@ const VideoDetailPage = () => {
                           }}
                         />
                       </Box>
-                      <Box sx={{ p: 1, width: "60%" }}>
+                      <Box sx={{ flex: 1, py: 0.5 }}>
                         <Typography
-                          variant="subtitle2"
+                          variant="body2"
                           sx={{
                             overflow: "hidden",
                             textOverflow: "ellipsis",
@@ -674,12 +756,15 @@ const VideoDetailPage = () => {
                             WebkitBoxOrient: "vertical",
                             lineHeight: 1.2,
                             mb: 0.5,
+                            fontSize: "0.75rem",
+                            fontWeight: 500,
+                            color: (theme) =>
+                              theme.palette.mode === "light"
+                                ? "black"
+                                : "inherit",
                           }}
                         >
                           {video.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {video.channelName}
                         </Typography>
                       </Box>
                     </Paper>

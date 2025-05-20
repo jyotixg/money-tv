@@ -35,7 +35,10 @@ const ScrollContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   display: "flex",
   alignItems: "center",
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? "rgba(15, 23, 42, 0.6)"
+      : theme.palette.background.paper,
   padding: theme.spacing(1, 1),
 }));
 
@@ -44,7 +47,10 @@ const ScrollButton = styled(IconButton)(({ theme }) => ({
   zIndex: 2,
   height: "60%",
   padding: theme.spacing(1),
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? "rgba(15, 23, 42, 0.6)"
+      : theme.palette.background.paper,
   transition: "opacity 0.3s ease",
   "&.left": {
     left: 0,
@@ -75,7 +81,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor:
     theme.palette.mode === "dark"
-      ? theme.palette.grey[800]
+      ? "rgba(30, 39, 84, 1)"
       : theme.palette.grey[100],
   color: theme.palette.text.secondary,
   textTransform: "none",
@@ -84,7 +90,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   "&:hover": {
     backgroundColor:
       theme.palette.mode === "dark"
-        ? theme.palette.grey[700]
+        ? "rgba(59, 130, 246, 0.25)"
         : theme.palette.grey[200],
     color: theme.palette.text.primary,
   },

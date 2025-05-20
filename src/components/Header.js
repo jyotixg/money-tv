@@ -20,8 +20,12 @@ import {
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: 15,
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.divider}`,
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? "rgba(30, 39, 84, 1)"
+      : theme.palette.background.paper,
+  border:
+    theme.palette.mode === "light" && `1px solid ${theme.palette.divider}`,
   display: "flex",
   alignItems: "center",
   // marginRight: theme.spacing(2),
@@ -33,9 +37,7 @@ const Search = styled("div")(({ theme }) => ({
   },
   [theme.breakpoints.down("sm")]: {
     backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.paper
-        : "#f8f8f8",
+      theme.palette.mode === "dark" ? "rgba(30, 39, 84, 1)" : "#f8f8f8",
     border: `1px solid ${
       theme.palette.mode === "dark"
         ? theme.palette.divider
@@ -101,8 +103,8 @@ const Header = ({ toggleSidebar }) => {
           backgroundColor: "background.paper",
           color: "text.primary",
           boxShadow: "none",
-          borderBottom: "1px solid",
-          borderColor: "divider",
+          borderBottom: theme.palette.mode === "light" && "1px solid",
+          borderColor: theme.palette.mode === "light" && "divider",
         }}
         elevation={0}
       >
@@ -199,8 +201,8 @@ const Header = ({ toggleSidebar }) => {
         color: "text.primary",
         paddingLeft: 3,
         boxShadow: "none",
-        borderBottom: "1px solid",
-        borderColor: "divider",
+        borderBottom: theme.palette.mode === "light" && "1px solid",
+        borderColor: theme.palette.mode === "light" && "divider",
       }}
       elevation={0}
     >
