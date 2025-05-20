@@ -6,13 +6,23 @@ const createStaticDate = (daysAgo) => {
   return baseDate.toISOString();
 };
 
+// Helper function to create a slug from a string
+const createSlug = (text) => {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "") // Remove special characters
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Replace multiple hyphens with a single hyphen
+    .trim(); // Trim whitespace from both ends
+};
+
 export const mainArr = [
   {
     sectionTitle: "What Everyone's watching?",
     type: "videos",
-    content: Array.from({ length: 15 }, (_, i) => ({
-      id: i + 1,
-      name: [
+    slug: "trending-videos",
+    content: Array.from({ length: 15 }, (_, i) => {
+      const videoNames = [
         "Budget 2024: Complete Analysis and Impact",
         "NFT Market: Dead or Just Beginning?",
         "5G Stocks: Next Big Investment Theme",
@@ -28,39 +38,47 @@ export const mainArr = [
         "Consumer Stocks Analysis",
         "Metal Sector Outlook",
         "Banking Sector NPA Analysis",
-      ][i],
-      description:
-        "Expert analysis and detailed insights into sector-specific opportunities and market trends...",
-      videoUrl: "",
-      thumbnailUrl: `https://picsum.photos/seed/${i + 15}/536/354`,
-      uploadDate: createStaticDate(i),
-      views: 75000 + i * 35000,
-      duration: [
-        "11:30",
-        "14:45",
-        "16:20",
-        "13:15",
-        "15:50",
-        "12:25",
-        "17:40",
-        "14:05",
-        "15:30",
-        "18:15",
-        "13:40",
-        "16:55",
-        "12:10",
-        "15:35",
-        "14:20",
-      ][i],
-      channelName: "MONEY TV",
-    })),
+      ];
+
+      return {
+        id: i + 1,
+        name: videoNames[i],
+        slug: createSlug(videoNames[i]),
+        description:
+          "Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...Expert analysis and detailed insights into sector-specific opportunities and market trends...",
+        videoUrl: "",
+        thumbnailUrl: `https://picsum.photos/seed/${i + 15}/536/354`,
+        uploadDate: createStaticDate(i),
+        views: 75000 + i * 35000,
+        duration: [
+          "11:30",
+          "14:45",
+          "16:20",
+          "13:15",
+          "15:50",
+          "12:25",
+          "17:40",
+          "14:05",
+          "15:30",
+          "18:15",
+          "13:40",
+          "16:55",
+          "12:10",
+          "15:35",
+          "14:20",
+        ][i],
+        channelName: "MONEY TV",
+      };
+    }),
   },
   {
     sectionTitle: "Advertisement",
     type: "ads",
+    slug: "advertisements",
     content: [
       {
         id: "ad-1",
+        slug: "premium-investment-course",
         adImageUrl: "https://picsum.photos/seed/ad1/800/200",
         redirectUrl: "https://example.com/premium",
         title: "Premium Investment Course",
@@ -69,6 +87,7 @@ export const mainArr = [
       },
       {
         id: "ad-2",
+        slug: "pro-trading-platform",
         adImageUrl: "https://picsum.photos/seed/ad2/800/200",
         redirectUrl: "https://example.com/trading",
         title: "Pro Trading Platform",
@@ -80,9 +99,9 @@ export const mainArr = [
   {
     sectionTitle: "Trending Shorts",
     type: "shorts",
-    content: Array.from({ length: 15 }, (_, i) => ({
-      id: `short-${i + 1}`,
-      title: [
+    slug: "trending-shorts",
+    content: Array.from({ length: 15 }, (_, i) => {
+      const shortTitles = [
         "Quick Stock Tip: Hidden Small Cap Gem!",
         "3 Must-Know Trading Patterns",
         "Crypto Market Update in 60 Seconds",
@@ -98,37 +117,43 @@ export const mainArr = [
         "Bank Nifty Prediction",
         "Commodity Market Tips",
         "Stock Market News Flash",
-      ][i],
-      videoUrl: `https://www.youtube.com/embed/SHORT_ID_${i + 1}`,
-      thumbnailUrl: `https://picsum.photos/seed/short${i}/200/350`,
-      views: 50000 + i * 25000,
-      uploadDate: createStaticDate(i),
-      duration: [
-        "00:45",
-        "00:50",
-        "00:55",
-        "00:40",
-        "00:35",
-        "00:45",
-        "00:50",
-        "00:40",
-        "00:45",
-        "00:55",
-        "00:40",
-        "00:45",
-        "00:50",
-        "00:35",
-        "00:45",
-      ][i],
-      channelName: "MONEY TV Shorts",
-    })),
+      ];
+
+      return {
+        id: `short-${i + 1}`,
+        title: shortTitles[i],
+        slug: createSlug(shortTitles[i]),
+        videoUrl: `https://www.youtube.com/embed/SHORT_ID_${i + 1}`,
+        thumbnailUrl: `https://picsum.photos/seed/short${i}/200/350`,
+        views: 50000 + i * 25000,
+        uploadDate: createStaticDate(i),
+        duration: [
+          "00:45",
+          "00:50",
+          "00:55",
+          "00:40",
+          "00:35",
+          "00:45",
+          "00:50",
+          "00:40",
+          "00:45",
+          "00:55",
+          "00:40",
+          "00:45",
+          "00:50",
+          "00:35",
+          "00:45",
+        ][i],
+        channelName: "MONEY TV Shorts",
+      };
+    }),
   },
   {
     sectionTitle: "Recently Added",
     type: "videos",
-    content: Array.from({ length: 15 }, (_, i) => ({
-      id: i + 1,
-      name: [
+    slug: "recently-added",
+    content: Array.from({ length: 15 }, (_, i) => {
+      const videoNames = [
         "Reliance Jio IPO 2025: Date, Valuation, and Latest News | MONEY TV Podcast",
         "Adani Airports IPO in The works: Group Plans fund infusion, Listing of Airports",
         "HDFC Bank Q4 Results: Profit Growth, NPA Trends, and Future Outlook",
@@ -144,31 +169,37 @@ export const mainArr = [
         "Bank Nifty Options Trading Strategies",
         "US Tech Stocks: FAANG Analysis 2024",
         "Dividend Investing: Building Passive Income",
-      ][i],
-      description:
-        "In-depth analysis and expert insights on the latest market trends and investment opportunities...",
-      videoUrl: "",
-      thumbnailUrl: `https://picsum.photos/seed/${i}/536/354`,
-      uploadDate: createStaticDate(i),
-      views: 100000 + i * 50000,
-      duration: [
-        "12:45",
-        "15:30",
-        "10:15",
-        "18:20",
-        "14:55",
-        "11:40",
-        "16:25",
-        "13:50",
-        "17:35",
-        "19:10",
-        "15:45",
-        "12:30",
-        "14:15",
-        "16:50",
-        "13:25",
-      ][i],
-      channelName: "MONEY TV",
-    })),
+      ];
+
+      return {
+        id: i + 1,
+        name: videoNames[i],
+        slug: createSlug(videoNames[i]),
+        description:
+          "In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...In-depth analysis and expert insights on the latest market trends and investment opportunities...",
+        videoUrl: "",
+        thumbnailUrl: `https://picsum.photos/seed/${i}/536/354`,
+        uploadDate: createStaticDate(i),
+        views: 100000 + i * 50000,
+        duration: [
+          "12:45",
+          "15:30",
+          "10:15",
+          "18:20",
+          "14:55",
+          "11:40",
+          "16:25",
+          "13:50",
+          "17:35",
+          "19:10",
+          "15:45",
+          "12:30",
+          "14:15",
+          "16:50",
+          "13:25",
+        ][i],
+        channelName: "MONEY TV",
+      };
+    }),
   },
 ];

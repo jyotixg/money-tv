@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { ContentCopy, Share, WhatsApp } from "@mui/icons-material";
 import { useRouter } from "next/router";
+import { mainArr } from "../../data/homeData";
 
 const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
   <Box
@@ -104,7 +105,17 @@ const VideoCard = ({ video, sectionIndex }) => {
   };
 
   const handleCardClick = () => {
-    router.push(`/${sectionIndex}/${video.id}`);
+    // Find the section this video belongs to
+    const section = mainArr.find((s, index) => {
+      if (typeof sectionIndex === "number") {
+        return index === sectionIndex;
+      }
+      return s.content.some((v) => v.id === video.id);
+    });
+
+    if (section) {
+      router.push(`/${section.slug}/${video.id}`);
+    }
   };
 
   return (

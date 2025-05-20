@@ -649,7 +649,7 @@ const Footer = () => {
       component="footer"
       sx={{
         py: 1,
-        bgcolor: "background.paper", // Use theme background instead of hardcoded color
+        bgcolor: theme.palette.mode === "dark" ? "background.paper" : "#f5f5f5",
         borderTop: 1,
         borderColor: "divider",
       }}

@@ -9,6 +9,7 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { mainArr } from "../../data/homeData";
 
 const ShortCard = ({ short, sectionIndex }) => {
   const router = useRouter();
@@ -28,7 +29,17 @@ const ShortCard = ({ short, sectionIndex }) => {
   }, [short.uploadDate]);
 
   const handleCardClick = () => {
-    router.push(`/${sectionIndex}/${short.id}`);
+    // Find the section this short belongs to
+    const section = mainArr.find((s, index) => {
+      if (typeof sectionIndex === "number") {
+        return index === sectionIndex;
+      }
+      return s.type === "shorts";
+    });
+
+    if (section) {
+      router.push(`/${section.slug}/${short.id}`);
+    }
   };
 
   return (

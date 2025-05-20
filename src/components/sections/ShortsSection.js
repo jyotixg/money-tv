@@ -13,6 +13,7 @@ import {
   ChevronRight as ChevronRightIcon,
 } from "@mui/icons-material";
 import { useRouter } from "next/router";
+import { mainArr } from "../../data/homeData";
 
 const ShortsSection = ({ title, shorts, sectionIndex }) => {
   const router = useRouter();
@@ -44,7 +45,11 @@ const ShortsSection = ({ title, shorts, sectionIndex }) => {
   };
 
   const handleViewMore = () => {
-    router.push(`/section/${sectionIndex}`);
+    // Find the section by index
+    const section = mainArr.find((s, index) => index === sectionIndex);
+    if (section && section.slug) {
+      router.push(`/section/${section.slug}`);
+    }
   };
 
   return (
@@ -108,7 +113,7 @@ const ShortsSection = ({ title, shorts, sectionIndex }) => {
             maxWidth: "100%", // Ensure container doesn't exceed viewport
           }}
         >
-          {shorts.map((short) => (
+          {shorts.slice(0, 10).map((short) => (
             <Box
               key={short.id}
               sx={{

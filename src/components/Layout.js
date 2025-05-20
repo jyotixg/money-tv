@@ -47,13 +47,28 @@ const TabsContainer = styled(Box)(({ theme }) => ({
 const Layout = ({ children }) => {
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // Only show the UI after first render on client
   useEffect(() => {
     setMounted(true);
+
+    // Check for user's preferred color scheme
+    if (typeof window !== "undefined") {
+      // Check localStorage first
+      const savedMode = localStorage.getItem("darkMode");
+      if (savedMode !== null) {
+        setIsDarkMode(savedMode === "true");
+      } else {
+        // If no saved preference, check system preference
+        const prefersDarkMode = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        setIsDarkMode(prefersDarkMode);
+      }
+    }
   }, []);
 
   const customTheme = useMemo(
@@ -71,7 +86,12 @@ const Layout = ({ children }) => {
   };
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    // Save preference to localStorage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("darkMode", newMode.toString());
+    }
   };
 
   if (!mounted) {
