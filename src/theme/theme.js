@@ -1,17 +1,51 @@
 import { createTheme } from "@mui/material/styles";
 
-const theme = createTheme({
+export const getDesignTokens = (mode) => ({
   palette: {
-    primary: {
-      main: "#1976d2",
-      light: "#42a5f5",
-      dark: "#1565c0",
-    },
-    secondary: {
-      main: "#9c27b0",
-      light: "#ba68c8",
-      dark: "#7b1fa2",
-    },
+    mode,
+    ...(mode === "light"
+      ? {
+          // Light mode
+          primary: {
+            main: "#001691",
+            light: "#1a2f9f",
+            dark: "#001066",
+          },
+          background: {
+            default: "#ffffff",
+            paper: "#ffffff",
+          },
+          text: {
+            primary: "#000000",
+            secondary: "rgba(0, 0, 0, 0.7)",
+          },
+          custom: {
+            brandBlue: "#001691",
+          },
+        }
+      : {
+          // Dark mode
+          primary: {
+            main: "#ffffff",
+            light: "#ffffff",
+            dark: "#e0e0e0",
+          },
+          background: {
+            default: "#040C38",
+            paper: "#0a1445",
+          },
+          text: {
+            primary: "#ffffff",
+            secondary: "rgba(255, 255, 255, 0.7)",
+          },
+          custom: {
+            lightBlue: "#1a2152",
+          },
+          action: {
+            selected: "#1a2152",
+            hover: "#232b5e",
+          },
+        }),
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -49,6 +83,96 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: mode === "dark" ? "#0a1445" : "#ffffff",
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: mode === "light" ? "#000000" : "#ffffff",
+          "&.Mui-selected": {
+            color: theme.palette.primary.main,
+          },
+          ...(mode === "dark" && {
+            backgroundColor: theme.palette.custom.lightBlue,
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover,
+            },
+          }),
+        }),
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          ...(mode === "dark" && {
+            backgroundColor: theme.palette.custom.lightBlue + " !important",
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover + " !important",
+            },
+          }),
+        }),
+        filled: {
+          ...(mode === "dark" && {
+            backgroundColor: "#1a2152 !important",
+          }),
+        },
+      },
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          ...(mode === "dark" && {
+            backgroundColor: theme.palette.custom.lightBlue,
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover,
+            },
+            "&.Mui-selected": {
+              backgroundColor: theme.palette.action.selected + " !important",
+              "&:hover": {
+                backgroundColor: theme.palette.action.hover + " !important",
+              },
+            },
+          }),
+        }),
+      },
+    },
+
+    MuiTypography: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          ...(mode === "light" && {
+            color:
+              ownerState.variant === "subtitle2" ||
+              (ownerState.variant === "body1" &&
+                ownerState.component === "div" &&
+                ownerState.gutterBottom)
+                ? theme.palette.custom.brandBlue
+                : "inherit",
+          }),
+          ...(mode === "dark" && {
+            color:
+              ownerState.variant === "subtitle2" ||
+              (ownerState.variant === "body1" &&
+                ownerState.component === "div" &&
+                ownerState.gutterBottom)
+                ? "#ffffff"
+                : "inherit",
+          }),
+        }),
+      },
+    },
   },
   breakpoints: {
     values: {
@@ -61,4 +185,9 @@ const theme = createTheme({
   },
 });
 
-export default theme;
+// Create a theme instance
+const createAppTheme = (mode) => {
+  return createTheme(getDesignTokens(mode));
+};
+
+export default createAppTheme;

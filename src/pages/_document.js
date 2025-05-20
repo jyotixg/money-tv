@@ -1,8 +1,11 @@
 import * as React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import createEmotionServer from "@emotion/server/create-instance";
-import theme from "../theme/theme";
+import createAppTheme from "@/theme/theme";
 import createEmotionCache from "../utils/createEmotionCache";
+
+// Create a default theme instance
+const defaultTheme = createAppTheme("light");
 
 export default class MyDocument extends Document {
   render() {
@@ -10,11 +13,20 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {/* PWA primary color */}
-          <meta name="theme-color" content={theme.palette.primary.main} />
+          <meta
+            name="theme-color"
+            content={defaultTheme.palette.primary.main}
+          />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          />
+          {/* Inject MUI styles first to match with the prepend: true configuration. */}
+          {this.props.emotionStyleTags}
         </Head>
         <body>
           <Main />
@@ -58,9 +70,6 @@ MyDocument.getInitialProps = async (ctx) => {
 
   return {
     ...initialProps,
-    styles: [
-      ...React.Children.toArray(initialProps.styles),
-      ...emotionStyleTags,
-    ],
+    emotionStyleTags,
   };
 };

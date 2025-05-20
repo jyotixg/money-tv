@@ -91,7 +91,7 @@ const ShortCard = ({ short, sectionIndex }) => {
               mb: 0.5,
             }}
           >
-            {short.title}
+            {/* {short.title} */}
           </Typography>
           {/* <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="caption">

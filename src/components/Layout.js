@@ -1,33 +1,25 @@
-import { useState, useMemo, useEffect } from "react";
-import {
-  Box,
-  styled,
-  createTheme,
-  ThemeProvider,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, styled, ThemeProvider, useMediaQuery } from "@mui/material";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import CategoryTabs from "./CategoryTabs";
 import Footer from "./Footer";
 import NoVideosPage from "@/pages/no-videos";
+import createAppTheme from "@/theme/theme";
 
 const MINI_DRAWER_WIDTH = 70;
 
 const Main = styled("main")(({ theme }) => ({
   flexGrow: 1,
-  // padding: theme.spacing(3),
-  // paddingRight: theme.spacing(0.1),
-  marginTop: theme.spacing(16), // Increased top margin to accommodate header + tabs
+  marginTop: theme.spacing(16),
   width: `calc(100% - ${MINI_DRAWER_WIDTH}px)`,
   minHeight: "100vh",
   backgroundColor: theme.palette.background.default,
   display: "flex",
   flexDirection: "column",
   [theme.breakpoints.down("sm")]: {
-    width: "100%", // Full width on mobile
-    marginTop: theme.spacing(20), // More space for stacked header + search + tabs
+    width: "100%",
+    marginTop: theme.spacing(20),
   },
 }));
 
@@ -39,30 +31,25 @@ const TabsContainer = styled(Box)(({ theme }) => ({
   zIndex: theme.zIndex.appBar - 1,
   backgroundColor: theme.palette.background.default,
   [theme.breakpoints.down("sm")]: {
-    top: "112px", // Adjusted for stacked header height
-    right: 0, // Full width on mobile
+    top: "112px",
+    right: 0,
   },
 }));
 
 const Layout = ({ children }) => {
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const isMobile = useMediaQuery("(max-width:600px)");
 
-  // Only show the UI after first render on client
   useEffect(() => {
     setMounted(true);
 
-    // Check for user's preferred color scheme
     if (typeof window !== "undefined") {
-      // Check localStorage first
       const savedMode = localStorage.getItem("darkMode");
       if (savedMode !== null) {
         setIsDarkMode(savedMode === "true");
       } else {
-        // If no saved preference, check system preference
         const prefersDarkMode = window.matchMedia(
           "(prefers-color-scheme: dark)"
         ).matches;
@@ -71,16 +58,6 @@ const Layout = ({ children }) => {
     }
   }, []);
 
-  const customTheme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: isDarkMode ? "dark" : "light",
-        },
-      }),
-    [isDarkMode]
-  );
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -88,7 +65,6 @@ const Layout = ({ children }) => {
   const toggleTheme = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
-    // Save preference to localStorage
     if (typeof window !== "undefined") {
       localStorage.setItem("darkMode", newMode.toString());
     }
@@ -98,8 +74,10 @@ const Layout = ({ children }) => {
     return null;
   }
 
+  const currentTheme = createAppTheme(isDarkMode ? "dark" : "light");
+
   return (
-    <ThemeProvider theme={customTheme}>
+    <ThemeProvider theme={currentTheme}>
       <Box
         sx={{
           display: "flex",
