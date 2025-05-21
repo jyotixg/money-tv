@@ -8,7 +8,7 @@ import {
   Stack,
   IconButton,
 } from "@mui/material";
-import { ContentCopy, Share, WhatsApp } from "@mui/icons-material";
+import { ContentCopy, Reply, WhatsApp } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { mainArr } from "../../data/homeData";
 
@@ -204,7 +204,14 @@ const VideoCard = ({ video, sectionIndex }) => {
             />
           </Box>
           <ActionButton
-            icon={<Share sx={{ fontSize: "1.1rem" }} />}
+            icon={
+              <Reply
+                sx={{
+                  fontSize: "1.3rem",
+                  transform: "rotate(180deg) scaleY(-1)",
+                }}
+              />
+            }
             label="Share"
             onClick={handleShare}
             isReversed={true}

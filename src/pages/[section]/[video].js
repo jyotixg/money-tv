@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import Layout from "../../components/Layout";
 import { mainArr } from "../../data/homeData";
-import { WhatsApp, ContentCopy, Share } from "@mui/icons-material";
+import { WhatsApp, ContentCopy, Reply } from "@mui/icons-material";
 import VideoSection from "../../components/sections/VideoSection";
 import ShortsSection from "../../components/sections/ShortsSection";
 
@@ -313,7 +313,14 @@ const VideoDetailPage = () => {
                 />
               </Box>
               <ActionButton
-                icon={<Share sx={{ fontSize: "1.1rem" }} />}
+                icon={
+                  <Reply
+                    sx={{
+                      fontSize: "1.3rem",
+                      transform: "rotate(180deg) scaleY(-1)",
+                    }}
+                  />
+                }
                 label="Share"
                 onClick={handleShare}
                 isReversed={true}
