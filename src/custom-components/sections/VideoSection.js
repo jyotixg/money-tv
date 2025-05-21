@@ -50,7 +50,7 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
   };
 
   return (
-    <Box sx={{}}>
+    <Box sx={{ pb: 2 }}>
       <Box
         sx={{
           display: "flex",

@@ -153,7 +153,7 @@ const VideoCard = ({ video, sectionIndex }) => {
             p: 1,
             display: "flex",
             flexDirection: "column",
-            height: "100px",
+            height: "90px",
             "&:last-child": {
               paddingBottom: 1.5,
             },
