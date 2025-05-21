@@ -8,7 +8,7 @@ import {
   useMediaQuery,
   Grid,
 } from "@mui/material";
-import VideoCard from "../cards/VideoCard";
+import VideoCard from "../../custom-components/cards/VideoCard";
 import {
   ChevronRight as ChevronRightIcon,
   ChevronLeft as ChevronLeftIcon,
