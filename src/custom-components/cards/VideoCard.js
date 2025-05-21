@@ -150,10 +150,10 @@ const VideoCard = ({ video, sectionIndex }) => {
         <CardContent
           sx={{
             flexGrow: 1,
-            p: 1.5,
+            p: 1,
             display: "flex",
             flexDirection: "column",
-            height: "120px",
+            height: "100px",
             "&:last-child": {
               paddingBottom: 1.5,
             },
@@ -170,8 +170,8 @@ const VideoCard = ({ video, sectionIndex }) => {
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               lineHeight: 1.2,
-              minHeight: "2.4em",
-              maxHeight: "2.4em",
+              minHeight: "2.5em",
+              maxHeight: "2.5em",
             }}
           >
             {video.name}
@@ -185,7 +185,9 @@ const VideoCard = ({ video, sectionIndex }) => {
               mb: 1,
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box
+              sx={{ display: "flex", alignItems: "center", gap: 1, mt: 0.5 }}
+            >
               <ActionButton
                 icon={<WhatsApp sx={{ fontSize: "1.3rem" }} />}
                 label="Send"
