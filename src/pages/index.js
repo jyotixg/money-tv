@@ -1,8 +1,8 @@
 import { Container } from "@mui/material";
 import Layout from "../components/Layout";
-import VideoSection from "../components/sections/VideoSection";
-import ShortsSection from "../components/sections/ShortsSection";
-import AdSection from "../components/sections/AdSection";
+import VideoSection from "../custom-components/sections/VideoSection";
+import ShortsSection from "../custom-components/sections/ShortsSection";
+import AdSection from "../custom-components/sections/AdSection";
 import { mainArr } from "../data/homeData";
 
 export default function Home() {

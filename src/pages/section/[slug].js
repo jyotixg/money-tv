@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import { Container, Box, Typography, Grid, Button } from "@mui/material";
 import Layout from "../../components/Layout";
 import { mainArr } from "../../data/homeData";
-import VideoCard from "../../components/cards/VideoCard";
-import ShortCard from "../../components/cards/ShortCard";
-import NoVideosFound from "@/components/NoVideosFound";
+import VideoCard from "../../custom-components/cards/VideoCard";
+import ShortCard from "../../custom-components/cards/ShortCard";
+import NoVideosFound from "@/custom-components/NoVideosFound";
 
 const SectionPage = ({ sectionData }) => {
   const router = useRouter();

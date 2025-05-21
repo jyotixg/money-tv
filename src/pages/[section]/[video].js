@@ -15,10 +15,10 @@ import {
 import Layout from "../../components/Layout";
 import { mainArr } from "../../data/homeData";
 import { WhatsApp, ContentCopy, Reply } from "@mui/icons-material";
-import VideoSection from "../../components/sections/VideoSection";
-import ShortsSection from "../../components/sections/ShortsSection";
-import ShareDialog from "../../components/ShareDialog";
-import CopyButton from "../../components/CopyButton";
+import VideoSection from "../../custom-components/sections/VideoSection";
+import ShortsSection from "../../custom-components/sections/ShortsSection";
+import ShareDialog from "../../custom-components/ShareDialog";
+import CopyButton from "../../custom-components/CopyButton";
 
 const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
   <Box

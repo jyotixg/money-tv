@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Container } from "@mui/material";
-import NoVideosFound from "../components/NoVideosFound";
+import NoVideosFound from "../custom-components/NoVideosFound";
 import Header from "../components/Header";
 
 const NoVideosPage = () => {
