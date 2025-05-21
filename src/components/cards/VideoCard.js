@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -8,9 +8,11 @@ import {
   Stack,
   IconButton,
 } from "@mui/material";
-import { ContentCopy, Reply, WhatsApp } from "@mui/icons-material";
+import { Reply, WhatsApp } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { mainArr } from "../../data/homeData";
+import ShareDialog from "../ShareDialog";
+import CopyButton from "../CopyButton";
 
 const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
   <Box
@@ -81,21 +83,11 @@ const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
 
 const VideoCard = ({ video, sectionIndex }) => {
   const router = useRouter();
-
-  const handleCopy = (e) => {
-    e.stopPropagation(); // Prevent card click event
-    navigator.clipboard?.writeText(video.name);
-  };
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   const handleShare = (e) => {
     e.stopPropagation(); // Prevent card click event
-    if (navigator.share) {
-      navigator.share({
-        title: video.name,
-        text: video.description,
-        url: window.location.href,
-      });
-    }
+    setShareDialogOpen(true);
   };
 
   const handleWhatsApp = (e) => {
@@ -119,106 +111,112 @@ const VideoCard = ({ video, sectionIndex }) => {
   };
 
   return (
-    <Card
-      sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        "&:hover": {
-          cursor: "pointer",
-        },
-        border: "none",
-        boxShadow: "none",
-      }}
-      onClick={handleCardClick}
-    >
-      <Box
-        sx={{ position: "relative", paddingTop: "56.25%", overflow: "hidden" }}
-      >
-        <CardMedia
-          component="img"
-          image={video.thumbnailUrl}
-          alt={video.name}
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            borderRadius: 2,
-          }}
-        />
-      </Box>
-      <CardContent
+    <>
+      <Card
         sx={{
-          flexGrow: 1,
-          p: 1.5,
+          width: "100%",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
-          height: "120px",
-          "&:last-child": {
-            paddingBottom: 1.5,
+          "&:hover": {
+            cursor: "pointer",
           },
+          border: "none",
+          boxShadow: "none",
         }}
+        onClick={handleCardClick}
       >
-        <Typography
-          variant="subtitle1"
-          component="div"
-          sx={{
-            fontWeight: 500,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            lineHeight: 1.2,
-            // mb: "auto",
-            minHeight: "2.4em",
-            maxHeight: "2.4em",
-          }}
-        >
-          {video.name}
-        </Typography>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            // mt: 1,
-            pt: 1,
-            // borderTop: 1,
-            // borderColor: "grey.100",
+            position: "relative",
+            paddingTop: "56.25%",
+            overflow: "hidden",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <ActionButton
-              icon={<WhatsApp sx={{ fontSize: "1.1rem" }} />}
-              label="Send"
-              onClick={handleWhatsApp}
-            />
-            <ActionButton
-              icon={<ContentCopy sx={{ fontSize: "1.1rem" }} />}
-              label="Copy"
-              onClick={handleCopy}
-            />
-          </Box>
-          <ActionButton
-            icon={
-              <Reply
-                sx={{
-                  fontSize: "1.3rem",
-                  transform: "rotate(180deg) scaleY(-1)",
-                }}
-              />
-            }
-            label="Share"
-            onClick={handleShare}
-            isReversed={true}
+          <CardMedia
+            component="img"
+            image={video.thumbnailUrl}
+            alt={video.name}
+            sx={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              borderRadius: 2,
+            }}
           />
         </Box>
-      </CardContent>
-    </Card>
+        <CardContent
+          sx={{
+            flexGrow: 1,
+            p: 1.5,
+            display: "flex",
+            flexDirection: "column",
+            height: "120px",
+            "&:last-child": {
+              paddingBottom: 1.5,
+            },
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            component="div"
+            sx={{
+              fontWeight: 500,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              lineHeight: 1.2,
+              minHeight: "2.4em",
+              maxHeight: "2.4em",
+            }}
+          >
+            {video.name}
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 2,
+              mb: 1,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <ActionButton
+                icon={<WhatsApp sx={{ fontSize: "1.3rem" }} />}
+                label="Send"
+                onClick={handleWhatsApp}
+              />
+              <CopyButton text={video.name} />
+            </Box>
+            <ActionButton
+              icon={
+                <Reply
+                  sx={{
+                    fontSize: "1.3rem",
+                    transform: "rotate(180deg) scaleY(-1)",
+                  }}
+                />
+              }
+              label="Share"
+              onClick={handleShare}
+              isReversed={true}
+            />
+          </Box>
+        </CardContent>
+      </Card>
+
+      <ShareDialog
+        open={shareDialogOpen}
+        onClose={() => setShareDialogOpen(false)}
+        url={window.location.href}
+        title={video.name}
+      />
+    </>
   );
 };
 

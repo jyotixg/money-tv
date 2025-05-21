@@ -17,6 +17,8 @@ import { mainArr } from "../../data/homeData";
 import { WhatsApp, ContentCopy, Reply } from "@mui/icons-material";
 import VideoSection from "../../components/sections/VideoSection";
 import ShortsSection from "../../components/sections/ShortsSection";
+import ShareDialog from "../../components/ShareDialog";
+import CopyButton from "../../components/CopyButton";
 
 const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
   <Box
@@ -95,6 +97,7 @@ const VideoDetailPage = () => {
   const [shortsData, setShortsData] = useState([]);
   const [recommendedVideos, setRecommendedVideos] = useState([]);
   const [adData, setAdData] = useState(null);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   useEffect(() => {
     // Only proceed when we have the query parameters
@@ -157,12 +160,8 @@ const VideoDetailPage = () => {
   };
 
   const handleShare = () => {
-    if (videoData && navigator.share) {
-      navigator.share({
-        title: videoData.name || videoData.title,
-        text: videoData.description || "",
-        url: window.location.href,
-      });
+    if (videoData) {
+      setShareDialogOpen(true);
     }
   };
 
@@ -302,15 +301,11 @@ const VideoDetailPage = () => {
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <ActionButton
-                  icon={<WhatsApp sx={{ fontSize: "1.1rem" }} />}
+                  icon={<WhatsApp sx={{ fontSize: "1.3rem" }} />}
                   label="Send"
                   onClick={handleWhatsApp}
                 />
-                <ActionButton
-                  icon={<ContentCopy sx={{ fontSize: "1.1rem" }} />}
-                  label="Copy"
-                  onClick={handleCopy}
-                />
+                <CopyButton text={videoData?.name || videoData?.title} />
               </Box>
               <ActionButton
                 icon={
@@ -782,6 +777,13 @@ const VideoDetailPage = () => {
           </Grid>
         </Grid>
       </Container>
+
+      <ShareDialog
+        open={shareDialogOpen}
+        onClose={() => setShareDialogOpen(false)}
+        url={window.location.href}
+        title={videoData?.name || videoData?.title}
+      />
     </Layout>
   );
 };
