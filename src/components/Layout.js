@@ -11,7 +11,7 @@ const MINI_DRAWER_WIDTH = 70;
 
 const Main = styled("main")(({ theme }) => ({
   flexGrow: 1,
-  marginTop: theme.spacing(16),
+  marginTop: theme.spacing(15),
   width: `calc(100% - ${MINI_DRAWER_WIDTH}px)`,
   minHeight: "100vh",
   backgroundColor: theme.palette.background.default,

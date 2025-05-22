@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -83,6 +83,13 @@ const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
 
 const VideoCard = ({ video, sectionIndex }) => {
   const router = useRouter();
+  const [shareUrl, setShareUrl] = useState("");
+
+  useEffect(() => {
+    // Set share URL only after component mounts on client side
+    setShareUrl(window.location.href);
+  }, []);
+
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   const handleShare = (e) => {
@@ -215,7 +222,7 @@ const VideoCard = ({ video, sectionIndex }) => {
       <ShareDialog
         open={shareDialogOpen}
         onClose={() => setShareDialogOpen(false)}
-        url={window.location.href}
+        url={shareUrl}
         title={video.name}
       />
     </>

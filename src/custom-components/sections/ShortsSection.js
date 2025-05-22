@@ -45,10 +45,10 @@ const ShortsSection = ({ title, shorts, sectionIndex }) => {
   };
 
   const handleViewMore = () => {
-    // Find the section by index
-    const section = mainArr.find((s, index) => index === sectionIndex);
+    // Find the section by index to get its slug
+    const section = mainArr[sectionIndex];
     if (section && section.slug) {
-      router.push(`/section/${section.slug}`);
+      router.push(`/${section.slug}`);
     }
   };
 
@@ -109,7 +109,7 @@ const ShortsSection = ({ title, shorts, sectionIndex }) => {
             "&::-webkit-scrollbar": {
               display: "none",
             },
-            px: 1,
+            // px: 1,
             maxWidth: "100%", // Ensure container doesn't exceed viewport
           }}
         >

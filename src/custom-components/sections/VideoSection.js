@@ -14,6 +14,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
 } from "@mui/icons-material";
 import { useRouter } from "next/router";
+import { mainArr } from "@/data/homeData";
 
 const VideoSection = ({ title, videos, sectionIndex }) => {
   const router = useRouter();
@@ -46,7 +47,11 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
   };
 
   const handleViewMore = () => {
-    router.push(`/section/${sectionIndex}`);
+    // Find the section by index to get its slug
+    const section = mainArr[sectionIndex];
+    if (section && section.slug) {
+      router.push(`/${section.slug}`);
+    }
   };
 
   return (
