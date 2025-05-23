@@ -254,7 +254,7 @@ const VideoDetailPage = () => {
                 mb: 2,
               }}
             >
-              <Box
+              {/* <Box
                 component="img"
                 src={videoData.thumbnailUrl}
                 alt={videoData.name || videoData.title}
@@ -265,6 +265,20 @@ const VideoDetailPage = () => {
                   width: "100%",
                   height: "100%",
                   objectFit: "contain",
+                }}
+              /> */}
+              <iframe
+                src="https://www.youtube.com/embed/mgmVOuLgFB0?autoplay=1&si=l_zJ0fk0fvKo7FnA"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
                 }}
               />
             </Box>

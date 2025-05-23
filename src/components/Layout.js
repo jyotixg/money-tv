@@ -93,9 +93,9 @@ const Layout = ({ children }) => {
         </TabsContainer>
         <Main>
           {children}
-          <Footer />
           {/* <NoVideosPage /> */}
         </Main>
+        <Footer />
         <Sidebar
           open={sidebarOpen}
           onClose={toggleSidebar}
