@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { mainArr } from "../../data/homeData";
 import ShareDialog from "../ShareDialog";
 import CopyButton from "../CopyButton";
+import { useMain } from "@/context/MainContext";
 
 const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
   <Box
@@ -81,9 +82,18 @@ const ActionButton = ({ icon, label, onClick, isReversed = false }) => (
   </Box>
 );
 
-const VideoCard = ({ video, sectionIndex }) => {
+const GridCard = ({ video, id, sectionData }) => {
   const router = useRouter();
   const [shareUrl, setShareUrl] = useState("");
+  const { contentConfigurations } = useMain();
+
+  // Finding the content type and then applying height and width according to configuration
+  const layout = contentConfigurations?.find(
+    (item) => item.label == video.content_details[0].content_type
+  );
+
+  let height = layout?.layout?.height;
+  let width = layout?.layout?.width;
 
   useEffect(() => {
     // Set share URL only after component mounts on client side
@@ -99,15 +109,17 @@ const VideoCard = ({ video, sectionIndex }) => {
 
   const handleWhatsApp = (e) => {
     e.stopPropagation(); // Prevent card click event
-    const text = encodeURIComponent(`${video.name}\n${window.location.href}`);
+    const text = encodeURIComponent(
+      `${video.content_details[0].url}\n${window.location.href}`
+    );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   };
 
   const handleCardClick = () => {
     // Find the section this video belongs to
-    const section = mainArr.find((s, index) => {
-      if (typeof sectionIndex === "number") {
-        return index === sectionIndex;
+    const section = sectionData.find((s, index) => {
+      if (typeof id === "number") {
+        return index === id;
       }
       return s.content.some((v) => v.id === video.id);
     });
@@ -121,8 +133,9 @@ const VideoCard = ({ video, sectionIndex }) => {
     <>
       <Card
         sx={{
-          width: "100%",
-          height: "100%",
+          // width: "100%",
+          // height: "100%",
+
           display: "flex",
           flexDirection: "column",
           "&:hover": {
@@ -135,19 +148,31 @@ const VideoCard = ({ video, sectionIndex }) => {
       >
         <Box
           sx={{
-            position: "relative",
-            paddingTop: "56.25%",
-            overflow: "hidden",
+            // position: "relative",
+            // paddingTop: "56.25%",
+            // overflow: "hidden",
+            width: width && {
+              lg: width?.lg,
+              md: width?.md,
+              sm: width?.sm,
+              xs: width?.xs,
+            },
+            height: height && {
+              lg: height?.lg,
+              md: height?.md,
+              sm: height?.sm,
+              xs: height?.xs,
+            },
           }}
         >
           <CardMedia
             component="img"
-            image={video.thumbnailUrl}
+            image={video.content_details[0].thumbnail_url} // currently we don't have to show carousel in each content that's why mapping 0th element
             alt={video.name}
             sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
+              // position: "absolute",
+              // top: 0,
+              // left: 0,
               width: "100%",
               height: "100%",
               borderRadius: 2,
@@ -200,7 +225,7 @@ const VideoCard = ({ video, sectionIndex }) => {
                 label="Send"
                 onClick={handleWhatsApp}
               />
-              <CopyButton text={video.name} />
+              <CopyButton text={video?.content_details[0]?.url} />
             </Box>
             <ActionButton
               icon={
@@ -229,4 +254,4 @@ const VideoCard = ({ video, sectionIndex }) => {
   );
 };
 
-export default VideoCard;
+export default GridCard;

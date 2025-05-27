@@ -1,11 +1,30 @@
+import { useEffect, useState } from "react";
 import { Container } from "@mui/material";
 import Layout from "../components/Layout";
-import VideoSection from "../custom-components/sections/VideoSection";
-import ShortsSection from "../custom-components/sections/ShortsSection";
-import AdSection from "../custom-components/sections/AdSection";
+import GridLayout from "../custom-components/layouts/GridLayout";
+import SliderLayout from "../custom-components/layouts/SliderLayout";
+import AdSection from "../custom-components/layouts/AdSection";
 import { mainArr } from "../data/homeData";
+import { useMain } from "@/context/MainContext";
 
 export default function Home() {
+  const [sectionData, setSectionData] = useState(null);
+  const { loading, error, fetchHomePageData } = useMain();
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const res = await fetchHomePageData();
+        const sections = res?.data?.response?.sections;
+        setSectionData(sections);
+      } catch (err) {
+        console.error("Error fetching home data:", err);
+      }
+    };
+
+    loadData();
+  }, [fetchHomePageData]);
+
   return (
     <Layout>
       <Container
@@ -16,32 +35,39 @@ export default function Home() {
           maxWidth: "100% !important",
         }}
       >
-        {mainArr.map((section, index) => {
-          switch (section.type) {
-            case "videos":
+        {sectionData?.map((section, index) => {
+          switch (section.layout_config?.type) {
+            case "grid":
               return (
-                <VideoSection
-                  key={`${section.type}-${index}`}
-                  title={section.sectionTitle}
-                  videos={section.content}
-                  sectionIndex={index}
+                <GridLayout
+                  section={section}
+                  // key={`${section.type}-${section.id}`}
+                  // name={section.name}
+                  // contents={section.contents}
+                  // id={section.id}
+                  sectionData={sectionData}
+                  // sections={section}
                 />
               );
-            case "shorts":
+            case "slider":
               return (
-                <ShortsSection
-                  key={`${section.type}-${index}`}
-                  title={section.sectionTitle}
-                  shorts={section.content}
-                  sectionIndex={index}
+                <SliderLayout
+                  // key={`${section.type}-${section.id}`}
+                  name={section.name}
+                  // shorts={section.contents}
+                  // id={section.id}
+                  section={section}
+                  sectionData={sectionData}
                 />
               );
-            case "ads":
+            case "ad":
               return (
                 <AdSection
                   key={`${section.type}-${index}`}
-                  title={section.sectionTitle}
-                  ads={section.content}
+                  name={section.name}
+                  ads={section.contents}
+                  section={section}
+                  sectionData={sectionData}
                 />
               );
             default:

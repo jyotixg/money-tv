@@ -2,27 +2,35 @@ import { useState, useRef } from "react";
 import {
   Box,
   Typography,
-  Button,
   IconButton,
+  Button,
   useTheme,
   useMediaQuery,
-  Grid,
 } from "@mui/material";
-import VideoCard from "../../custom-components/cards/VideoCard";
+import SliderCard from "../cards/SliderCard";
 import {
-  ChevronRight as ChevronRightIcon,
   ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
 } from "@mui/icons-material";
 import { useRouter } from "next/router";
-import { mainArr } from "@/data/homeData";
+import { mainArr } from "../../data/homeData";
 
-const VideoSection = ({ title, videos, sectionIndex }) => {
+const SliderLayout = ({
+  title,
+  shorts,
+  sectionIndex,
+  sectionData,
+  section,
+}) => {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const scrollContainerRef = useRef(null);
   const [showLeftScroll, setShowLeftScroll] = useState(false);
   const [showRightScroll, setShowRightScroll] = useState(true);
+  const size = section?.layout_config?.size;
+  const height = section?.layout_config?.height;
+  const width = section?.layout_config?.width;
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
@@ -38,7 +46,6 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
       const containerWidth = scrollContainerRef.current.clientWidth;
       const scrollAmount =
         direction === "left" ? -containerWidth : containerWidth;
-
       scrollContainerRef.current.scrollBy({
         left: scrollAmount,
         behavior: "smooth",
@@ -48,14 +55,14 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
 
   const handleViewMore = () => {
     // Find the section by index to get its slug
-    const section = mainArr[sectionIndex];
-    if (section && section.slug) {
-      router.push(`/${section.slug}`);
+    let currentSection = sectionData.find((item) => item.id == section.id);
+    if (currentSection && currentSection.slug) {
+      router.push(`/${currentSection.slug}`);
     }
   };
 
   return (
-    <Box sx={{ pb: 2 }}>
+    <Box sx={{ mb: 4 }}>
       <Box
         sx={{
           display: "flex",
@@ -70,7 +77,7 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
           fontWeight="bold"
           color="primary.main"
         >
-          {title}
+          {section.name}
         </Typography>
         <Button
           endIcon={<ChevronRightIcon />}
@@ -82,12 +89,12 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
       </Box>
 
       <Box sx={{ position: "relative" }}>
-        {showLeftScroll && (
+        {showLeftScroll && !isMobile && (
           <IconButton
             sx={{
               position: "absolute",
               left: -20,
-              top: "30%",
+              top: "50%",
               transform: "translateY(-50%)",
               zIndex: 2,
               bgcolor: "background.paper",
@@ -104,38 +111,52 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
           ref={scrollContainerRef}
           onScroll={handleScroll}
           sx={{
+            display: "flex",
+            flexShrink: 0,
+            gap: 2,
             overflowX: "auto",
             scrollbarWidth: "none",
             "&::-webkit-scrollbar": {
               display: "none",
             },
+            // px: 1,
+            maxWidth: "100%", // Ensure container doesn't exceed viewport
+            // height: height && {
+            //   lg: height.lg,
+            //   md: height.md,
+            //   xl: height.xl,
+            //   xs: height.xs,
+            // },
           }}
         >
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              flexWrap: "nowrap",
-              width: "max-content",
-            }}
-          >
-            {videos.map((video) => (
-              <Grid
-                item
-                key={video.id}
-                sx={{
-                  width: {
-                    xs: "calc(100vw - 32px)",
-                    sm: "350px",
-                    md: "300px",
-                    lg: "325px",
-                  },
-                }}
-              >
-                <VideoCard video={video} sectionIndex={sectionIndex} />
-              </Grid>
-            ))}
-          </Grid>
+          {section?.contents?.map((short) => (
+            <Box
+              key={short.id}
+              sx={
+                {
+                  // aspectRatio: 9 / 16,
+                  // height: "400px",
+                  // width: "250px",
+                  // flex: {
+                  //   xs: "0 0 250px", // Increased width for shorts cards
+                  //   sm: "0 0 250px",
+                  // },
+                  // minWidth: "250px", // Ensure minimum width
+                  // maxWidth: "250px", // Ensure maximum width
+                  // height: "400px", // Increased height
+                }
+              }
+            >
+              <SliderCard
+                key={short.id}
+                short={short}
+                sectionIndex={sectionIndex}
+                sectionData={sectionData}
+                section={section}
+                styles={{ height, width }}
+              />
+            </Box>
+          ))}
         </Box>
 
         {showRightScroll && !isMobile && (
@@ -143,7 +164,7 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
             sx={{
               position: "absolute",
               right: -20,
-              top: "30%",
+              top: "50%",
               transform: "translateY(-50%)",
               zIndex: 2,
               bgcolor: "background.paper",
@@ -160,4 +181,4 @@ const VideoSection = ({ title, videos, sectionIndex }) => {
   );
 };
 
-export default VideoSection;
+export default SliderLayout;

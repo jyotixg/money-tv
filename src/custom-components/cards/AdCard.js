@@ -9,7 +9,7 @@ import {
 import Grid from "@mui/material/Unstable_Grid2";
 import { ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 
-const AdCard = ({ ad }) => {
+const AdCard = ({ ad, section, sectionData }) => {
   return (
     <Card
       sx={{
@@ -32,8 +32,8 @@ const AdCard = ({ ad }) => {
       >
         <CardMedia
           component="img"
-          image={ad.adImageUrl}
-          alt={ad.title}
+          image={ad?.content_details[0]?.thumbnail_url}
+          alt={ad.name}
           sx={{
             height: "100%",
             width: "100%",
@@ -80,7 +80,7 @@ const AdCard = ({ ad }) => {
             mb: 1,
           }}
         >
-          {ad.title}
+          {ad.name}
         </Typography>
 
         <Typography

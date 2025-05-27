@@ -15,8 +15,8 @@ import {
 import Layout from "../../components/Layout";
 import { mainArr } from "../../data/homeData";
 import { WhatsApp, ContentCopy, Reply } from "@mui/icons-material";
-import VideoSection from "../../custom-components/sections/VideoSection";
-import ShortsSection from "../../custom-components/sections/ShortsSection";
+import GridLayout from "../../custom-components/layouts/GridLayout";
+import SliderLayout from "../../custom-components/layouts/SliderLayout";
 import ShareDialog from "../../custom-components/ShareDialog";
 import CopyButton from "../../custom-components/CopyButton";
 
@@ -124,17 +124,17 @@ const VideoDetailPage = () => {
         }
 
         // Get shorts data
-        const shortsSection = mainArr.find((s) => s.type === "shorts");
-        if (shortsSection) {
-          setShortsData(shortsSection.content.slice(0, 10));
+        const SliderLayout = mainArr.find((s) => s.type === "shorts");
+        if (SliderLayout) {
+          setShortsData(SliderLayout.content.slice(0, 10));
         }
 
         // Get recommended videos (from other video sections)
-        const otherVideoSections = mainArr.filter(
+        const otherGridLayouts = mainArr.filter(
           (s) => s.type === "videos" && s !== foundSection
         );
-        if (otherVideoSections.length > 0) {
-          setRecommendedVideos(otherVideoSections[0].content.slice(0, 5));
+        if (otherGridLayouts.length > 0) {
+          setRecommendedVideos(otherGridLayouts[0].content.slice(0, 5));
         }
 
         // Get ad data
@@ -168,7 +168,7 @@ const VideoDetailPage = () => {
   const handleWhatsApp = () => {
     if (videoData) {
       const text = encodeURIComponent(
-        `${videoData.name || videoData.title}\n${window.location.href}`
+        `${videoData.content_details[0]?.url}\n${window.location.href}`
       );
       window.open(`https://wa.me/?text=${text}`, "_blank");
     }
@@ -319,7 +319,7 @@ const VideoDetailPage = () => {
                   label="Send"
                   onClick={handleWhatsApp}
                 />
-                <CopyButton text={videoData?.name || videoData?.title} />
+                <CopyButton text={videoData?.content_details[0]?.url} />
               </Box>
               <ActionButton
                 icon={
@@ -549,11 +549,11 @@ const VideoDetailPage = () => {
                       }}
                       onClick={() => {
                         // Find the section for this video
-                        const videoSection = mainArr.find((section) =>
+                        const GridLayout = mainArr.find((section) =>
                           section.content.some((v) => v.id === video.id)
                         );
-                        if (videoSection) {
-                          router.push(`/${videoSection.slug}/${video.id}`);
+                        if (GridLayout) {
+                          router.push(`/${GridLayout.slug}/${video.id}`);
                         }
                       }}
                     >
@@ -648,11 +648,11 @@ const VideoDetailPage = () => {
                         backgroundColor: "background.paper",
                       }}
                       onClick={() => {
-                        const shortsSection = mainArr.find(
+                        const SliderLayout = mainArr.find(
                           (s) => s.type === "shorts"
                         );
-                        if (shortsSection) {
-                          router.push(`/${shortsSection.slug}/${short.id}`);
+                        if (SliderLayout) {
+                          router.push(`/${SliderLayout.slug}/${short.id}`);
                         }
                       }}
                     >
@@ -729,11 +729,11 @@ const VideoDetailPage = () => {
                       }}
                       onClick={() => {
                         // Find the section for this video
-                        const videoSection = mainArr.find((section) =>
+                        const GridLayout = mainArr.find((section) =>
                           section.content.some((v) => v.id === video.id)
                         );
-                        if (videoSection) {
-                          router.push(`/${videoSection.slug}/${video.id}`);
+                        if (GridLayout) {
+                          router.push(`/${GridLayout.slug}/${video.id}`);
                         }
                       }}
                     >

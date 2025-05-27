@@ -10,11 +10,24 @@ import { formatDistanceToNow } from "date-fns";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { mainArr } from "../../data/homeData";
+import { useMain } from "@/context/MainContext";
 
-const ShortCard = ({ short, sectionIndex }) => {
+const SliderCard = ({ short, sectionIndex, id, sectionData, styles }) => {
   const router = useRouter();
   const [formattedDate, setFormattedDate] = useState("recently");
   const [mounted, setMounted] = useState(false);
+  // const height = styles.height;
+  // const width = styles.width;
+
+  const { contentConfigurations } = useMain();
+
+  // Finding the content type and then applying height and width according to configuration
+  const layout = contentConfigurations?.find(
+    (item) => item.label == short?.content_details[0]?.content_type
+  );
+
+  let height = layout?.layout?.height;
+  let width = layout?.layout?.width;
 
   useEffect(() => {
     setMounted(true);
@@ -30,7 +43,7 @@ const ShortCard = ({ short, sectionIndex }) => {
 
   const handleCardClick = () => {
     // Find the section this short belongs to
-    const section = mainArr.find((s, index) => {
+    const section = sectionData.find((s, index) => {
       if (typeof sectionIndex === "number") {
         return index === sectionIndex;
       }
@@ -45,10 +58,36 @@ const ShortCard = ({ short, sectionIndex }) => {
   return (
     <Card
       sx={{
-        width: 250,
-        height: 400,
-        display: "flex",
-        flexDirection: "column",
+        // width: 250,
+        // height: height && {
+        //   lg: height.lg,
+        //   md: height.md,
+        //   xl: height.xl,
+        //   xs: height.xs,
+        // },
+        // width: width && {
+        //   lg: width.lg,
+        //   md: width.md,
+        //   xl: width.xl,
+        //   xs: width.xs,
+        // },
+        // height: 400,
+        // aspectRatio: 9 / 16,
+        // display: "flex",
+        // flexDirection: "column",
+
+        width: width && {
+          lg: width.lg,
+          md: width.md,
+          sm: width.sm,
+          xs: width.xs,
+        },
+        height: height && {
+          lg: height.lg,
+          md: height.md,
+          sm: height.sm,
+          xs: height.xs,
+        },
         borderRadius: 3,
         "&:hover": {
           cursor: "pointer",
@@ -61,7 +100,7 @@ const ShortCard = ({ short, sectionIndex }) => {
       <Box sx={{ position: "relative", height: "100%" }}>
         <CardMedia
           component="img"
-          image={short.thumbnailUrl}
+          image={short?.content_details[0]?.thumbnail_url}
           alt={short.title}
           sx={{
             height: "100%",
@@ -109,4 +148,4 @@ const ShortCard = ({ short, sectionIndex }) => {
   );
 };
 
-export default ShortCard;
+export default SliderCard;

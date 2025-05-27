@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import axiosInstance from "../configs/axios";
 import createAxiosInstance from "../configs/axios";
 
@@ -12,13 +18,32 @@ export const useMain = () => {
   return context;
 };
 
-const baseUrl = `https://weighted-employment-dame-anthropology.trycloudflare.com/api/v1`;
+const baseUrl = `https://reconstruction-waterproof-york-ownership.trycloudflare.com/api/v1`;
 
 export const MainProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const axiosInstance = createAxiosInstance();
+  const [contentConfigurations, setContentConfigurations] = useState(null);
+
+  // This api contains configuration based on content type
+  useEffect(() => {
+    const getContentConfiguration = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `${baseUrl}/contentConfigurations`
+        );
+        setContentConfigurations(response.data.response.data);
+        return response;
+      } catch (err) {
+        console.log({ err });
+        throw err;
+      }
+    };
+
+    getContentConfiguration();
+  }, []);
 
   const fetchHomePageData = async () => {
     try {
@@ -70,6 +95,7 @@ export const MainProvider = ({ children }) => {
     fetchHomePageData,
     fetchSectionPageData,
     fetchVideoPageData,
+    contentConfigurations,
   };
 
   return <MainContext.Provider value={value}>{children}</MainContext.Provider>;

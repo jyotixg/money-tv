@@ -1,121 +1,103 @@
 import { useRouter } from "next/router";
 import { Box, Container, Typography, Grid } from "@mui/material";
-import VideoCard from "../custom-components/cards/VideoCard";
-import ShortCard from "../custom-components/cards/ShortCard";
+import GridCard from "../custom-components/cards/GridCard";
+import SliderCard from "../custom-components/cards/SliderCard";
 import { mainArr } from "../data/homeData";
 import Layout from "@/components/Layout";
+import { useEffect, useState } from "react";
+import { useMain } from "@/context/MainContext";
+import AdSection from "@/custom-components/layouts/AdSection";
+import GridLayout from "@/custom-components/layouts/GridLayout";
 
 export default function SectionPage() {
   const router = useRouter();
   const { section } = router.query;
+  const [sectionData, setSectionData] = useState(null);
+  const { loading, error, fetchSectionPageData } = useMain();
 
-  // Find section data by slug
-  const sectionData = mainArr.find((s) => s.slug === section);
-  const sectionIndex = mainArr.findIndex((s) => s.slug === section);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const res = await fetchSectionPageData(section);
+        const sections = res?.data?.response?.sections;
+        setSectionData(sections);
+      } catch (err) {
+        console.error("Error fetching section list data:", err);
+      }
+    };
 
-  if (!sectionData) {
-    return (
-      <Layout>
-        <Container>
-          <Box sx={{ py: 4 }}>
-            <Typography variant="h4">Section not found</Typography>
-          </Box>
-        </Container>
-      </Layout>
-    );
-  }
-
-  // Get the content array
-  const items = sectionData.content;
-
-  if (!items || items.length === 0) {
-    return (
-      <Layout>
-        <Container>
-          <Box sx={{ py: 4 }}>
-            <Typography variant="h4">No items found in this section</Typography>
-          </Box>
-        </Container>
-      </Layout>
-    );
-  }
+    loadData();
+  }, [fetchSectionPageData]);
 
   return (
     <Layout>
       <Container maxWidth="xl">
-        <Box sx={{ px: 3, pb: 3 }}>
-          <Typography
-            variant="h6"
-            component="h2"
-            fontWeight="bold"
-            color="primary.main"
-            mb={2}
-          >
-            {sectionData.sectionTitle}
-          </Typography>
-
-          <Grid container spacing={2}>
-            {sectionData.type === "shorts"
-              ? // Render shorts grid
-                items.map((short) => (
-                  <Grid
-                    item
-                    key={short.id}
-                    xs={12}
-                    sm={6}
-                    md={4}
-                    lg={2.4}
-                    sx={{ height: "100%" }}
-                  >
-                    <ShortCard short={short} sectionIndex={sectionIndex} />
-                  </Grid>
-                ))
-              : // Render videos grid
-                items.map((video) => (
-                  <Grid
-                    item
-                    key={video.id}
-                    xs={12}
-                    sm={6}
-                    md={4}
-                    lg={3}
-                    sx={{ height: "100%" }}
-                  >
-                    <VideoCard video={video} sectionIndex={sectionIndex} />
-                  </Grid>
-                ))}
-          </Grid>
+        <Box sx={{ px: 3 }}>
+          {sectionData?.map((section, index) => {
+            switch (section.layout_config?.type) {
+              case "grid":
+                return (
+                  <GridLayout
+                    key={`${section.type}-${index}`}
+                    video={section.contents}
+                    section={section}
+                    sectionData={section.contents}
+                  />
+                );
+              case "slider":
+                return (
+                  <SliderLayout
+                    key={`${section.type}-${section.id}`}
+                    name={section.name}
+                    section={section}
+                    sectionData={sectionData}
+                  />
+                );
+              case "ad":
+                return (
+                  <AdSection
+                    key={`${section.type}-${index}`}
+                    name={section.name}
+                    ads={section.contents}
+                    section={section}
+                    sectionData={sectionData}
+                  />
+                );
+              default:
+                return null;
+            }
+          })}
         </Box>
       </Container>
     </Layout>
   );
 }
 
-// This ensures all paths are pre-rendered at build time
-export async function getStaticPaths() {
-  const paths = mainArr.map((section) => ({
-    params: { section: section.slug },
-  }));
+// // This ensures all paths are pre-rendered at build time
+// export async function getStaticPaths() {
+//   const paths = sectionList?.map((section) => ({
+//     params: { section: section.slug },
+//   }));
 
-  return {
-    paths,
-    fallback: false,
-  };
-}
+//   return {
+//     paths,
+//     fallback: false,
+//   };
+// }
 
-// Get the static props for the page
-export async function getStaticProps({ params }) {
-  const sectionData = mainArr.find((s) => s.slug === params.section);
+// // Get the static props for the page
+// export async function getStaticProps({ params }) {
+//   const sectionData = sectionList?.find((s) => s.slug === params.section);
 
-  if (!sectionData) {
-    return {
-      notFound: true,
-    };
-  }
+//   if (!sectionData) {
+//     return {
+//       notFound: true,
+//     };
+//   }
 
-  return {
-    props: {
-      sectionData,
-    },
-  };
-}
+//   return {
+//     props: {
+//       sectionData,
+//     },
+//   };
+// }
